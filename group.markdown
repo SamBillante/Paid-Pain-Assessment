@@ -15,7 +15,7 @@ description: A brief introduction to the four students working on this project
 <dd>Hello, my name is Chase Fetherling. I am a Computer Science and Philosophy double major, working on a Master's in Computer Science as well. I work mainly with JavaScript, C#, and Python.</dd>
 </d1>
 
-<img src="samuel.jpg" width="30%">
+<img src="samuel.JPG" width="30%">
 <d1>
 <dt><b>Samuel Billante</b></dt>
 <dd>Hello! I'm Sam Billante, a computer science and economics double major pursuing masters degrees in both those fields. I am passionate about algorithm design and most of my experience is in machine learning and cryptography.</dd>
