@@ -4,9 +4,8 @@
 layout: default
 title: About our team
 description: A brief introduction to the four students working on this project
+show_group_link: false
 ---
-
-[Back to homepage](./)
 
 
 <img src="chase.jpg" width="30%">

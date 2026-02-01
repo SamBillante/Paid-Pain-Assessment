@@ -4,9 +4,8 @@
 layout: default
 title: Deliverables
 description: Various artifacts from our design process
+show_deliverables_link: false
 ---
-
-[Back to homepage](./)
 
 # Sprint 1 Deliverables
 
