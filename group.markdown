@@ -22,7 +22,7 @@ show_group_link: false
 
 <img src="dominic.jpg" width="30%">
 <d1>
-<dt><b>Domonic Ullmer</b></dt>
+<dt><b>Dominic Ullmer</b></dt>
 <dd>I am a Computer Science major and MBA student with a concentration in Data Analytics at The University of Alabama, graduating with a B.S. in 2026 and an MBA in 2027 through the university’s selective STEM to MBA Program. This academic path combines technical depth with structured business training and has shaped my ability to work across data, operations, and strategy.</dd>
 </d1>
 
