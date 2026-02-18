@@ -12,9 +12,9 @@
  * Replace 'your-project' with your actual Supabase project ID
  */
 const SUPABASE_CONFIG = {
-    url: 'https://your-project.supabase.co',
-    anonKey: 'your-anon-key-here',
-    projectId: 'your-project-id'
+    url: 'https://thjwmbfbswmmguxnowgs.supabase.co',
+    anonKey: 'sb_publishable_2kRpUnyZbjxBLxZgxoe6Fg_3gh97-QJ',
+    projectId: 'thjwmbfbswmmguxnowgs'
 };
 
 // Table name in Supabase
@@ -271,7 +271,7 @@ class SupabaseClient {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.anonKey}`,
+                        'apikey': this.anonKey,
                         'Prefer': 'return=representation'
                     },
                     body: JSON.stringify(data)
@@ -341,7 +341,14 @@ const supabase = new SupabaseClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey
 // ==============================================================================
 
 /**
- * Collect form data
+ * Convert camelCase to snake_case
+ */
+function camelToSnakeCase(str) {
+    return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+}
+
+/**
+ * Collect form data and convert to snake_case for Supabase
  */
 function collectFormData() {
     const form = document.getElementById('intakeForm');
@@ -369,7 +376,19 @@ function collectFormData() {
         }
     });
     
-    return data;
+    // Convert camelCase keys to snake_case for Supabase
+    const snakeCaseData = {};
+    Object.keys(data).forEach(key => {
+        const snakeKey = camelToSnakeCase(key);
+        snakeCaseData[snakeKey] = data[key];
+    });
+    
+    // Convert disclaimer_agreement to boolean
+    if (snakeCaseData.disclaimer_agreement) {
+        snakeCaseData.disclaimer_agreement = snakeCaseData.disclaimer_agreement === 'agree';
+    }
+    
+    return snakeCaseData;
 }
 
 /**
@@ -734,7 +753,7 @@ async function syncOfflineSubmissions() {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`
+                        'apikey': SUPABASE_CONFIG.anonKey
                     },
                     body: JSON.stringify(data)
                 }
