@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>3D Anatomy Viewer</title>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.158/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.158/examples/jsm/"
+  }
+}
+</script>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+}
+
+#viewer{
+width:100%;
+height:600px;
+}
+
+#infoPanel{
+padding:20px;
+background:#f4f4f4;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="viewer"></div>
+
+<div id="infoPanel">
+<h2 id="partTitle">Select a body part</h2>
+<p id="partDescription"></p>
+</div>
+
+<script type="module" src="viewer.js"></script>
+
+</body>
+
+</html>
