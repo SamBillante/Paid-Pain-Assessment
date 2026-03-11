@@ -139,11 +139,18 @@ scene.add(light)
 
 const controls = new OrbitControls(camera,renderer.domElement)
 controls.target.set(0, 0.85, 0)
+controls.enableDamping = true
+controls.dampingFactor = 0.05
 
 const raycaster = new THREE.Raycaster()
 const pointer = new THREE.Vector2()
 const bodyMeshes = []
 const meshVolume = new Map()
+
+// Vertical spine axis — camera direction is computed horizontally
+// from this line, preserving the mesh's Y height for target
+const SPINE_X = 0
+const SPINE_Z = 0
 
 const loader = new GLTFLoader()
 
@@ -164,29 +171,29 @@ loader.load("assets/human-body2.glb",(gltf)=>{
           m.needsUpdate = true
         }
         Array.isArray(mat) ? mat.forEach(applyTransparent) : applyTransparent(mat)
-      } else {
-        bodyMeshes.push(child)
-        child.geometry.computeBoundingBox()
-        const box = child.geometry.boundingBox
-        const size = new THREE.Vector3()
-        box.getSize(size)
-        meshVolume.set(child.uuid, size.x * size.y * size.z)
+        return
       }
 
       const checkMat = (m) => {
-        if(m.opacity < 0.5 && matName !== "Text"){
+        if(m.opacity < 0.5){
           m.opacity = 1
           m.transparent = false
           m.needsUpdate = true
         }
       }
       Array.isArray(mat) ? mat.forEach(checkMat) : checkMat(mat)
+
+      bodyMeshes.push(child)
+      child.geometry.computeBoundingBox()
+      const box = child.geometry.boundingBox
+      const size = new THREE.Vector3()
+      box.getSize(size)
+      meshVolume.set(child.uuid, size.x * size.y * size.z)
     }
   })
 
 })
 
-// Highlight material renders on top of everything
 const highlightMat = new THREE.MeshStandardMaterial({
   color: 0xff6600,
   emissive: 0xff3300,
@@ -196,11 +203,87 @@ const highlightMat = new THREE.MeshStandardMaterial({
   transparent: true,
   opacity: 0.95
 })
-highlightMat.renderOrder = 999
 
 let selectedMesh = null
 let originalMat = null
 let originalRenderOrder = 0
+
+// Camera animation
+let animating = false
+let animFrom = { pos: new THREE.Vector3(), target: new THREE.Vector3() }
+let animTo   = { pos: new THREE.Vector3(), target: new THREE.Vector3() }
+let animT = 0
+const ANIM_DURATION = 60
+
+// Default zoom distance from spine
+const DEFAULT_DIST = 2
+
+const defaultCamPos = new THREE.Vector3(0, 0.85, DEFAULT_DIST)
+const defaultTarget = new THREE.Vector3(0, 0.85, 0)
+
+function startCameraAnim(toPos, toTarget) {
+  animFrom.pos.copy(camera.position)
+  animFrom.target.copy(controls.target)
+  animTo.pos.copy(toPos)
+  animTo.target.copy(toTarget)
+  animT = 0
+  animating = true
+}
+
+function getCameraPositionForMesh(mesh) {
+  const box = new THREE.Box3().setFromObject(mesh)
+  const meshCenter = new THREE.Vector3()
+  box.getCenter(meshCenter)
+
+  const meshSize = new THREE.Vector3()
+  box.getSize(meshSize)
+  const maxDim = Math.max(meshSize.x, meshSize.y, meshSize.z)
+
+  // Horizontal direction from spine axis to mesh center (ignore Y)
+  const horizDir = new THREE.Vector3(
+    meshCenter.x - SPINE_X,
+    0,
+    meshCenter.z - SPINE_Z
+  )
+
+  // Fall back to forward if mesh is on the spine
+  if(horizDir.length() < 0.001){
+    horizDir.set(0, 0, 1)
+  } else {
+    horizDir.normalize()
+  }
+
+  // Camera sits at mesh's Y height, pushed outward along horizontal direction
+  const zoomDist = Math.max(maxDim * 3, 0.08)
+  const camPos = new THREE.Vector3(
+    meshCenter.x + horizDir.x * zoomDist,
+    meshCenter.y,                           // match mesh height, no vertical angle
+    meshCenter.z + horizDir.z * zoomDist
+  )
+
+  // Target is the mesh center
+  return { camPos, meshCenter, horizDir }
+}
+
+function getZoomOutPosition(horizDir, meshCenter) {
+  // Keep the same horizontal angle as the zoomed view
+  // but pull back to default distance from spine
+  // and return to default vertical height (y = 0.85)
+  const camPos = new THREE.Vector3(
+    SPINE_X + horizDir.x * DEFAULT_DIST,
+    defaultCamPos.y,
+    SPINE_Z + horizDir.z * DEFAULT_DIST
+  )
+  const target = new THREE.Vector3(
+    SPINE_X,
+    defaultTarget.y,
+    SPINE_Z
+  )
+  return { camPos, target }
+}
+
+// Store last used horizontal direction for zoom-out
+let lastHorizDir = new THREE.Vector3(0, 0, 1)
 
 renderer.domElement.addEventListener("click", (e) => {
 
@@ -211,17 +294,22 @@ renderer.domElement.addEventListener("click", (e) => {
   raycaster.setFromCamera(pointer, camera)
   const hits = raycaster.intersectObjects(bodyMeshes, false)
 
-  // Restore previous selection
+  // Deselect — zoom out maintaining horizontal angle
   if(selectedMesh && originalMat){
     selectedMesh.material = originalMat
     selectedMesh.renderOrder = originalRenderOrder
     selectedMesh = null
     originalMat = null
+
+    const { camPos, target } = getZoomOutPosition(lastHorizDir, defaultTarget)
+    startCameraAnim(camPos, target)
+
+    document.getElementById("partTitle").textContent = "Select a body part"
+    document.getElementById("partDescription").textContent = ""
+    return
   }
 
   if(hits.length > 0){
-
-    // Smallest mesh wins
     hits.sort((a, b) => {
       const volA = meshVolume.get(a.object.uuid) ?? Infinity
       const volB = meshVolume.get(b.object.uuid) ?? Infinity
@@ -234,15 +322,16 @@ renderer.domElement.addEventListener("click", (e) => {
 
     console.log("Selected mesh:", mesh.name)
     console.log("Material:", matName)
-    console.log("Volume:", meshVolume.get(mesh.uuid)?.toFixed(6))
 
     originalMat = mesh.material
     originalRenderOrder = mesh.renderOrder
     selectedMesh = mesh
-
-    // Bump render order so it draws over surrounding meshes
     mesh.material = highlightMat
     mesh.renderOrder = 999
+
+    const { camPos, meshCenter, horizDir } = getCameraPositionForMesh(mesh)
+    lastHorizDir.copy(horizDir)
+    startCameraAnim(camPos, meshCenter)
 
     document.getElementById("partTitle").textContent = mesh.name.replace(/_/g, " ")
     document.getElementById("partDescription").textContent = `Material: ${matName}`
@@ -250,10 +339,20 @@ renderer.domElement.addEventListener("click", (e) => {
 
 })
 
-camera.position.set(0, 0.85, 2)
+camera.position.copy(defaultCamPos)
 
 function animate(){
   requestAnimationFrame(animate)
+
+  if(animating){
+    animT++
+    const t = Math.min(animT / ANIM_DURATION, 1)
+    const ease = t < 0.5 ? 2*t*t : -1+(4-2*t)*t
+    camera.position.lerpVectors(animFrom.pos, animTo.pos, ease)
+    controls.target.lerpVectors(animFrom.target, animTo.target, ease)
+    if(t >= 1) animating = false
+  }
+
   controls.update()
   renderer.render(scene,camera)
 }
