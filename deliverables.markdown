@@ -7,6 +7,14 @@ description: Various artifacts from our design process
 show_deliverables_link: false
 ---
 
+# Sprint 2 Deliverables
+
+*   [Sprint Presentation](https://bama365-my.sharepoint.com/:p:/g/personal/sbillante_crimson_ua_edu/IQB_fGrU-gbORLyh1Zej46lyAWGXEbSrFBZTbWdLhxioeIs?e=qeqq7c){:target="_blank"}
+*   [Sprint Backlog](https://bama365-my.sharepoint.com/:w:/g/personal/sbillante_crimson_ua_edu/IQCvqgnNkw87TLvPrBOlBwtmAdEXs_dMfma_UuYdtX020ds?e=YcovmI){:target="_blank"}
+*   [Project Backlog](https://bama365-my.sharepoint.com/:x:/g/personal/sbillante_crimson_ua_edu/IQCMbBlPkH1xSK9mAHJsXZbnAY7vi3T-C8xEOPflMpXUZd8?e=iu9VWN){:target="_blank"}
+*   [Project Planning Document](https://bama365-my.sharepoint.com/:w:/g/personal/sbillante_crimson_ua_edu/IQAnfU9RTevBSZwQpNLgKBJeAbRicQ2_d7QRcVDVll2XKe4?e=t8ht1Q){:target="_blank"}
+
+
 # Sprint 1 Deliverables
 
 *   [Preliminary Presentation](https://bama365-my.sharepoint.com/:p:/g/personal/sbillante_crimson_ua_edu/IQDr9XKls1BdS5C2GuX_iM9JAZsMcBOfjsZcHKZj2kQfIZ0?e=g2zU6L){:target="_blank"}
