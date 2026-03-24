@@ -1,7 +1,10 @@
+import streamlit as st
 import cv2
 import numpy as np
 from ultralytics import YOLO
 from collections import deque
+
+st.set_page_config(page_title="Movement Symmetry Demo", layout="wide")
 
 class Smoother:
     def __init__(self, size=5):
@@ -26,66 +29,58 @@ def angle(a, b, c):
     ang = np.degrees(np.arccos(np.clip(cos_angle, -1.0, 1.0)))
     return ang
 
-
 def symmetry_score(a, b):
     return abs(a - b)
 
 
-model = YOLO("yolov8n-pose.pt")  
+model = YOLO("yolov8n-pose.pt")
 
+st.title("Analyzer")
+st.write("Angle + Symmetry")
 
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-if not cap.isOpened():
-    raise RuntimeError("Could not open camera")
+start = st.button("Start Camera")
 
-while True:
-    ret, frame = cap.read()
-    if not ret:
-        break
+frame_window = st.image([])
 
-    results = model(frame, verbose=False)
+if start:
+    cap = cv2.VideoCapture(0)
 
-    if len(results) > 0 and results[0].keypoints is not None:
-        kpts = results[0].keypoints.xy[0].cpu().numpy()  
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            st.write("Camera error")
+            break
 
+        results = model(frame, verbose=False)
 
-        L_hip = kpts[11]
-        L_knee = kpts[13]
-        L_ankle = kpts[15]
+        if len(results) > 0 and results[0].keypoints is not None:
+            kpts = results[0].keypoints.xy[0].cpu().numpy()
 
-        R_hip = kpts[12]
-        R_knee = kpts[14]
-        R_ankle = kpts[16]
+            L_hip, L_knee, L_ankle = kpts[11], kpts[13], kpts[15]
+            R_hip, R_knee, R_ankle = kpts[12], kpts[14], kpts[16]
 
+            left_knee_angle = angle(L_hip, L_knee, L_ankle)
+            right_knee_angle = angle(R_hip, R_knee, R_ankle)
 
-        left_knee_angle = angle(L_hip, L_knee, L_ankle)
-        right_knee_angle = angle(R_hip, R_knee, R_ankle)
+            L = smooth_left_knee(left_knee_angle)
+            R = smooth_right_knee(right_knee_angle)
 
+            score = symmetry_score(L, R)
+            symmetry_pct = max(0, 100 - score * 2)
 
-        L = smooth_left_knee(left_knee_angle)
-        R = smooth_right_knee(right_knee_angle)
+            cv2.putText(frame, f"L Knee: {int(L)} deg", (30, 60),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255,255,255), 2)
+            cv2.putText(frame, f"R Knee: {int(R)} deg", (30, 100),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255,255,255), 2)
 
+            cv2.putText(frame, f"Symmetry: {int(symmetry_pct)}%", (30, 150),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,255,0), 3)
 
-        score = symmetry_score(L, R)
-        symmetry_pct = max(0, 100 - score * 2)
+            if score > 15:
+                cv2.putText(frame, "ASYMMETRY DETECTED", (30, 200),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,0,255), 3)
 
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame_window.image(frame)
 
-        cv2.putText(frame, f"L Knee: {int(L)} deg", (30, 60),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255,255,255), 2)
-        cv2.putText(frame, f"R Knee: {int(R)} deg", (30, 100),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255,255,255), 2)
-
-        cv2.putText(frame, f"Symmetry: {int(symmetry_pct)}%", (30, 150),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,255,0), 3)
-
-        if score > 15:
-            cv2.putText(frame, "ASYMMETRY DETECTED", (30, 200),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,0,255), 3)
-
-    cv2.imshow("YOLOv8 Movement Symmetry", frame)
-
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-cap.release()
-cv2.destroyAllWindows()
+    cap.release()
