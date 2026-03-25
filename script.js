@@ -12,9 +12,7 @@
  * Replace 'your-project' with your actual Supabase project ID
  */
 const SUPABASE_CONFIG = {
-    url: 'https://thjwmbfbswmmguxnowgs.supabase.co',
-    anonKey: 'sb_publishable_2kRpUnyZbjxBLxZgxoe6Fg_3gh97-QJ',
-    projectId: 'thjwmbfbswmmguxnowgs'
+    
 };
 
 // Table name in Supabase
