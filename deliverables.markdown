@@ -7,6 +7,11 @@ description: Various artifacts from our design process
 show_deliverables_link: false
 ---
 
+# Sprint 3 Deliverables
+
+*   [Project Video](https://bama365-my.sharepoint.com/:v:/r/personal/sbillante_crimson_ua_edu/Documents/Screen%20Recording%202026-04-16%20225723.mp4?csf=1&web=1&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=K7uzaI){:target="_blank"}
+
+
 # Sprint 2 Deliverables
 
 *   [Sprint Presentation](https://bama365-my.sharepoint.com/:p:/g/personal/sbillante_crimson_ua_edu/IQB_fGrU-gbORLyh1Zej46lyAWGXEbSrFBZTbWdLhxioeIs?e=qeqq7c){:target="_blank"}
