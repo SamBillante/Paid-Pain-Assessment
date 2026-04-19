@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pain Consultation Intake Form - Naturallee Goode</title>
     <link rel="stylesheet" href="styles.css">
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/"
+      }
+    }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -15,10 +23,11 @@
             <p class="form-description">Please complete this short intake to help us better understand what your body is experiencing. Your responses allow us to personalize your wellness consultation.</p>
             <p class="form-description">
                 <a href="upperbodyscan.html">Upper Body Scan</a> | <a href="lowerbodyscan.html">Lower Body Scan</a>
-            </p> 
+            </p>
         </div>
 
         <form id="intakeForm" class="intake-form">
+
             <!-- Section 1: Contact Information -->
             <fieldset>
                 <legend>1. Contact Information</legend>
@@ -42,44 +51,35 @@
 
             <!-- Section 2: Interactive Body Map -->
             <fieldset>
-                <legend>2. Interactive Body Map (Tap All That Apply)</legend>
-                <p class="field-description">Where is your discomfort located?</p>
-                
-                <div class="checkbox-group body-map">
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="painLocation" value="neck"> Neck
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="painLocation" value="shoulder"> Shoulder
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="painLocation" value="upper-back"> Upper Back
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="painLocation" value="mid-back"> Mid Back
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="painLocation" value="low-back"> Low Back
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="painLocation" value="hip"> Hip
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="painLocation" value="knee"> Knee
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="painLocation" value="ankle-foot"> Ankle / Foot
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="painLocation" value="elbow"> Elbow
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="painLocation" value="wrist-hand"> Wrist / Hand
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="painLocation" value="head"> Head
-                    </label>
+                <legend>2. Interactive Body Map</legend>
+                <p class="field-description">Click or tap a body part to select it. Your selection will appear below.</p>
+
+                <!-- 3D Viewer -->
+                <div class="viewer-wrapper">
+                    <div id="loadingOverlay" class="viewer-loading">
+                        <div id="loadingBox" class="loading-box">
+                            <div id="loadingLabel" class="loading-label">Loading model...</div>
+                            <div class="loading-bar-track">
+                                <div id="loadingBarFill" class="loading-bar-fill"></div>
+                            </div>
+                            <div id="loadingPercent" class="loading-percent">0%</div>
+                        </div>
+                    </div>
+                    <div id="viewer"></div>
+                    <div id="infoPanel" class="viewer-info-panel">
+                        <div id="panelToggle" class="panel-toggle" title="Collapse info panel">‹</div>
+                        <div class="viewer-info-content">
+                            <div id="partTitle" class="viewer-part-title">Search or select a body part</div>
+                            <div id="partDescription" class="viewer-part-description"></div>
+                            <div class="viewer-search">
+                                <input type="text" id="searchInput" placeholder="Search muscles..." autocomplete="off">
+                                <ul id="searchResults"></ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <input type="hidden" id="selectedBodyArea" name="selectedBodyArea" value="">
 
                 <div class="form-group side-selector">
                     <label>Side:</label>
@@ -352,6 +352,17 @@
             </div>
         </div>
 
+    </div>
+
     <script src="script.js"></script>
+    <script type="module" src="viewer.js"></script>
+
+    <script>
+        // Sync viewer selection to hidden form field
+        document.addEventListener('bodyAreaSelected', (e) => {
+            const field = document.getElementById('selectedBodyArea')
+            if (field) field.value = e.detail.area
+        })
+    </script>
 </body>
 </html>
