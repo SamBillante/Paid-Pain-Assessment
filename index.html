@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pain Consultation Intake Form - Naturallee Goode</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-header">
+            <h1>Pain Consultation Intake Form</h1>
+            <p class="subtitle">Where does it hurt?</p>
+            <p class="form-description"><em>For wellness education and movement support (non-medical)</em></p>
+            <p class="form-description">Please complete this short intake to help us better understand what your body is experiencing. Your responses allow us to personalize your wellness consultation.</p>
+            <p class="form-description">
+                <a href="upperbodyscan.html">Upper Body Scan</a> | <a href="lowerbodyscan.html">Lower Body Scan</a>
+            </p> 
+        </div>
+
+        <form id="intakeForm" class="intake-form">
+            <!-- Section 1: Contact Information -->
+            <fieldset>
+                <legend>1. Contact Information</legend>
+                
+                <div class="form-group">
+                    <label for="fullName">Full Name *</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" placeholder="(123) 456-7890" required>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Section 2: Interactive Body Map -->
+            <fieldset>
+                <legend>2. Interactive Body Map (Tap All That Apply)</legend>
+                <p class="field-description">Where is your discomfort located?</p>
+                
+                <div class="checkbox-group body-map">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="painLocation" value="neck"> Neck
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="painLocation" value="shoulder"> Shoulder
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="painLocation" value="upper-back"> Upper Back
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="painLocation" value="mid-back"> Mid Back
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="painLocation" value="low-back"> Low Back
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="painLocation" value="hip"> Hip
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="painLocation" value="knee"> Knee
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="painLocation" value="ankle-foot"> Ankle / Foot
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="painLocation" value="elbow"> Elbow
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="painLocation" value="wrist-hand"> Wrist / Hand
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="painLocation" value="head"> Head
+                    </label>
+                </div>
+
+                <div class="form-group side-selector">
+                    <label>Side:</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="painSide" value="left"> Left
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="painSide" value="right"> Right
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="painSide" value="both"> Both
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Section 3: Pain Details -->
+            <fieldset>
+                <legend>3. Pain Details</legend>
+
+                <div class="form-group">
+                    <label>How long has this been bothering you?</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="radio" name="painDuration" value="today"> Today
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="painDuration" value="less-than-week"> Less than 1 week
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="painDuration" value="1-4-weeks"> 1–4 weeks
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="painDuration" value="1-3-months"> 1–3 months
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="painDuration" value="3-plus-months"> 3+ months
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>How would you describe the discomfort?</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="discomfortType" value="tight-stiff"> Tight / Stiff
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="discomfortType" value="sore-achy"> Sore / Achy
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="discomfortType" value="sharp"> Sharp
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="discomfortType" value="burning"> Burning
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="discomfortType" value="tingling-numb"> Tingling / Numb
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="painLevel">Pain Level (0–10) *</label>
+                    <div class="pain-scale">
+                        <input type="range" id="painLevel" name="painLevel" min="0" max="10" value="5" required>
+                        <span id="painLevelValue">5</span>
+                    </div>
+                    <small>0 = No pain, 10 = Severe</small>
+                </div>
+            </fieldset>
+
+            <!-- Section 4: Triggers & Daily Factors -->
+            <fieldset>
+                <legend>4. Triggers & Daily Factors</legend>
+
+                <div class="form-group">
+                    <label>What seems to make it worse? (Select all that apply)</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="triggers" value="sitting"> Sitting
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="triggers" value="standing"> Standing
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="triggers" value="walking"> Walking
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="triggers" value="lifting"> Lifting
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="triggers" value="overhead-work"> Overhead work
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="triggers" value="exercise-workouts"> Exercise / workouts
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="triggers" value="sleeping-position"> Sleeping position
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="triggers" value="repetitive-motion"> Repetitive motion
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Brief notes about work, activity level, or daily routine (optional):</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="Tell us about your typical day..."></textarea>
+                </div>
+            </fieldset>
+
+            <!-- Section 5: Wellness Goal -->
+            <fieldset>
+                <legend>5. Your Wellness Goal</legend>
+
+                <div class="form-group">
+                    <label>What would you most like support with? *</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="wellnessGoal" value="reducing-pain"> Reducing pain or soreness
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="wellnessGoal" value="moving-comfortably"> Moving more comfortably
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="wellnessGoal" value="posture"> Improving posture
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="wellnessGoal" value="recovery"> Recovery from daily activity or workouts
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="wellnessGoal" value="long-term"> Long-term comfort and mobility
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Section 6: Consultation Preference -->
+            <fieldset>
+                <legend>6. Consultation Preference</legend>
+
+                <div class="form-group">
+                    <label>Which session are you most interested in? *</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="radio" name="consultationPreference" value="quick-check"> Quick Pain Check (15 minutes)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="consultationPreference" value="movement-relief"> Movement & Relief Session (30 minutes)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="consultationPreference" value="full-assessment"> Full Wellness Assessment (60 minutes)
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Section 7: Product Support -->
+            <fieldset>
+                <legend>7. Product Support</legend>
+
+                <div class="form-group">
+                    <label>Are you interested in learning about plant-based pain support products?</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="radio" name="productInterest" value="yes"> Yes
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="productInterest" value="maybe"> Maybe
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="productInterest" value="not-at-this-time"> Not at this time
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Section 8: Consent & Disclaimer -->
+            <fieldset>
+                <legend>8. Consent & Disclaimer</legend>
+
+                <div class="form-group consent-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="disclaimerAgreement" value="agree" required>
+                        I understand this wellness consultation is for education, movement support, and self-care guidance only. It is not medical diagnosis or treatment. *
+                    </label>
+                </div>
+            </fieldset>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="reset" class="btn btn-secondary">Clear Form</button>
+                <button type="submit" class="btn btn-primary">Get My Wellness Summary & Book My Session</button>
+            </div>
+
+            <p class="required-note">* Indicates required field</p>
+        </form>
+
+        <!-- Confirmation Screen (Hidden by default) -->
+        <div id="thankYouMessage" class="thank-you-message" style="display: none;">
+            <div class="confirmation-screen">
+                <!-- Header -->
+                <div class="confirmation-header">
+                    <h2>Thank You, Goode People!</h2>
+                    <p class="confirmation-subtitle">Your intake has been received</p>
+                </div>
+
+                <!-- Submission Summary -->
+                <div class="confirmation-section">
+                    <h3>Your Information</h3>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <label>Name:</label>
+                            <p id="summaryName"></p>
+                        </div>
+                        <div class="summary-item">
+                            <label>Email:</label>
+                            <p id="summaryEmail"></p>
+                        </div>
+                        <div class="summary-item">
+                            <label>Phone:</label>
+                            <p id="summaryPhone"></p>
+                        </div>
+                        <div class="summary-item">
+                            <label>Pain Level:</label>
+                            <p id="summaryPainLevel"></p>
+                        </div>
+                        <div class="summary-item">
+                            <label>Wellness Goal:</label>
+                            <p id="summaryWellnessGoal"></p>
+                        </div>
+                        <div class="summary-item">
+                            <label>Preferred Session:</label>
+                            <p id="summarySessions"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendly Booking Section -->
+                <div class="confirmation-section calendly-section">
+                    <h3>Book Your Consultation</h3>
+                    <p class="section-description">Schedule your personalized wellness consultation below. Choose a time that works best for you.</p>
+                    <div class="calendly-container" id="calendlyContainer"></div>
+                </div>
+
+                <!-- Next Steps -->
+                <div class="confirmation-section next-steps">
+                    <h3>What's Next?</h3>
+                    <ul>
+                        <li><strong>Step 1:</strong> Book your consultation using the calendar above</li>
+                        <li><strong>Step 2:</strong> You'll receive a confirmation email with session details</li>
+                        <li><strong>Step 3:</strong> We'll prepare personalized recommendations based on your intake</li>
+                    </ul>
+                </div>
+
+                <!-- Additional Info -->
+                <div class="confirmation-section info-section">
+                    <p class="info-text">We look forward to supporting your wellness journey. If you have any questions, please don't hesitate to reach out.</p>
+                    <div class="contact-info">
+                        <p><strong>Questions?</strong> Contact us at info@naturalleegoode.com</p>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <div class="confirmation-actions">
+                    <button type="button" class="btn-secondary" onclick="location.reload()">Return to Form</button>
+                </div>
+            </div>
+        </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
