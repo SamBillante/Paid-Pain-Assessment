@@ -613,12 +613,7 @@ function getPainLevelEmoji(painLevel) {
  * Update CALENDLY_URL in configuration to enable
  */
 function initializeCalendly() {
-    const CALENDLY_URL = ''; // Set to your Calendly URL, e.g., 'https://calendly.com/yourname/30min'
-    
-    if (!CALENDLY_URL) {
-        // Show placeholder if no URL configured
-        return;
-    }
+    const CALENDLY_URL = 'https://calendly.com/goode-naturalleegoode/ortho-pain-assessment-call';
     
     const container = document.getElementById('calendlyContainer');
     if (!container) return;
