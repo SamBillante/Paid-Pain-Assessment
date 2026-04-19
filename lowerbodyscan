@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lower Body Analyzer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+    }
+
+    p.subtitle {
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    #startBtn {
+      padding: 10px 28px;
+      font-size: 1rem;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    #startBtn:hover { background: #45a049; }
+
+    .video-container {
+      position: relative;
+      display: inline-block;
+      border: 3px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    video {
+      display: block;
+      width: 640px;
+      max-width: 100%;
+      transform: scaleX(-1);
+    }
+
+    canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      transform: scaleX(-1);
+    }
+
+    .info-box {
+      display: inline-block;
+      margin-top: 20px;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 20px 40px;
+      text-align: left;
+      min-width: 300px;
+    }
+
+    .info-box h2 {
+      margin: 0 0 12px;
+      font-size: 1.1rem;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+
+    .angle-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 6px 0;
+      font-size: 0.95rem;
+    }
+
+    .angle-row span:last-child {
+      font-weight: bold;
+    }
+
+    #scoreBox {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #eee;
+      font-size: 1rem;
+    }
+
+    #scoreValue {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    #feedback {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    #repBox {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #eee;
+      font-size: 0.95rem;
+    }
+
+    #status {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Lower Body Analyzer</h1>
+  <p class="subtitle">Uses your webcam to measure joint angles and score your squat form.</p>
+
+  <button id="startBtn" onclick="startCamera()">Start Camera</button>
+  <br>
+
+  <div class="video-container">
+    <video id="video" playsinline autoplay muted></video>
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <br>
+
+  <div class="info-box">
+    <h2>Joint Angles</h2>
+    <div class="angle-row"><span>Left Knee</span>  <span id="lKnee">—</span></div>
+    <div class="angle-row"><span>Right Knee</span> <span id="rKnee">—</span></div>
+    <div class="angle-row"><span>Left Hip</span>   <span id="lHip">—</span></div>
+    <div class="angle-row"><span>Right Hip</span>  <span id="rHip">—</span></div>
+    <div class="angle-row"><span>Torso Lean</span> <span id="torso">—</span></div>
+
+    <div id="scoreBox">
+      <div>Score: <span id="scoreValue">—</span><span style="font-size:1rem; color:#888">/100</span></div>
+      <div id="feedback" style="color:#888">Start the camera to begin.</div>
+    </div>
+
+    <div id="repBox">
+      Reps completed: <strong id="repCount">0</strong>
+      <div id="status">Waiting for squat...</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    let reps = 0;
+    let inSquat = false;
+    let hitBottom = false;
+
+    
+    function getAngle(a, b, c) {
+      const ab = [a.x - b.x, a.y - b.y];
+      const cb = [c.x - b.x, c.y - b.y];
+      const dot = ab[0]*cb[0] + ab[1]*cb[1];
+      const mag = Math.hypot(...ab) * Math.hypot(...cb);
+      return Math.round(Math.acos(Math.max(-1, Math.min(1, dot / mag))) * 180 / Math.PI);
+    }
+
+    
+    function scoreSquat(lKnee, rKnee, lHip, rHip, torso) {
+      let score = 100;
+      let messages = [];
+
+     
+      const kneeAvg = (lKnee + rKnee) / 2;
+      if (kneeAvg > 140) {
+        score -= 30;
+        messages.push("Squat too shallow - go deeper");
+      } else if (kneeAvg > 120) {
+        score -= 15;
+        messages.push("Try to go a little deeper");
+      } else {
+        messages.push("Good squat depth!");
+      }
+
+      
+      const kneeDiff = Math.abs(lKnee - rKnee);
+      if (kneeDiff > 20) {
+        score -= 20;
+        messages.push("Knees are uneven (" + kneeDiff + "° difference)");
+      } else {
+        messages.push("Knees are even");
+      }
+
+      
+      if (torso > 70) {
+        score -= 20;
+        messages.push("Too much forward lean - keep your chest up");
+      } else {
+        messages.push("Torso angle looks fine");
+      }
+
+      return { score: Math.max(0, score), messages };
+    }
+
+    function onResults(results) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (!results.poseLandmarks) return;
+
+      const lm = results.poseLandmarks;
+
+      
+      drawConnectors(ctx, lm, POSE_CONNECTIONS, { color: '#00cc66', lineWidth: 2 });
+      drawLandmarks(ctx, lm, { color: '#00cc66', radius: 4 });
+
+      
+      const lShoulder = lm[11], rShoulder = lm[12];
+      const lHipLm    = lm[23], rHipLm    = lm[24];
+      const lKneeLm   = lm[25], rKneeLm   = lm[26];
+      const lAnkleLm  = lm[27], rAnkleLm  = lm[28];
+
+      
+      const lKnee = getAngle(lHipLm, lKneeLm, lAnkleLm);
+      const rKnee = getAngle(rHipLm, rKneeLm, rAnkleLm);
+      const lHip  = getAngle(lShoulder, lHipLm, lKneeLm);
+      const rHip  = getAngle(rShoulder, rHipLm, rKneeLm);
+
+      
+      const midHip = { x: (lHipLm.x + rHipLm.x) / 2, y: (lHipLm.y + rHipLm.y) / 2 };
+      const midShoulder = { x: (lShoulder.x + rShoulder.x) / 2, y: (lShoulder.y + rShoulder.y) / 2 };
+      const torso = Math.round(Math.atan2(Math.abs(midShoulder.x - midHip.x), midHip.y - midShoulder.y) * 180 / Math.PI);
+
+      
+      document.getElementById('lKnee').textContent = lKnee + '°';
+      document.getElementById('rKnee').textContent = rKnee + '°';
+      document.getElementById('lHip').textContent  = lHip  + '°';
+      document.getElementById('rHip').textContent  = rHip  + '°';
+      document.getElementById('torso').textContent = torso + '°';
+
+      
+      const kneeAvg = (lKnee + rKnee) / 2;
+
+      if (!inSquat && kneeAvg < 150) {
+        inSquat = true;
+        hitBottom = false;
+        document.getElementById('status').textContent = 'Squatting down...';
+      }
+
+      if (inSquat && kneeAvg < 120) {
+        hitBottom = true;
+
+        
+        const { score, messages } = scoreSquat(lKnee, rKnee, lHip, rHip, torso);
+        document.getElementById('scoreValue').textContent = score;
+        document.getElementById('feedback').textContent = messages.join(' | ');
+
+      
+        const scoreEl = document.getElementById('scoreValue');
+        if (score >= 75) scoreEl.style.color = 'green';
+        else if (score >= 50) scoreEl.style.color = 'orange';
+        else scoreEl.style.color = 'red';
+
+        document.getElementById('status').textContent = 'At the bottom';
+      }
+
+      if (inSquat && hitBottom && kneeAvg > 155) {
+        inSquat = false;
+        hitBottom = false;
+        reps++;
+        document.getElementById('repCount').textContent = reps;
+        document.getElementById('status').textContent = 'Rep ' + reps + ' done! Stand tall, then squat again.';
+      }
+    }
+
+    async function startCamera() {
+      document.getElementById('startBtn').disabled = true;
+      document.getElementById('startBtn').textContent = 'Loading...';
+
+      const pose = new Pose({
+        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
+      });
+
+      pose.setOptions({
+        modelComplexity: 1,
+        smoothLandmarks: true,
+        minDetectionConfidence: 0.6,
+        minTrackingConfidence: 0.6
+      });
+
+      pose.onResults(onResults);
+
+      const camera = new Camera(video, {
+        onFrame: async () => { await pose.send({ image: video }); },
+        width: 640,
+        height: 480
+      });
+
+      await camera.start();
+
+      document.getElementById('startBtn').textContent = 'Camera On';
+      document.getElementById('status').textContent = 'Stand in view and start squatting!';
+    }
+  </script>
+
+</body>
+</html>
