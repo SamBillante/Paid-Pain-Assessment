@@ -126,15 +126,41 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 const scene = new THREE.Scene()
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / 600, 0.1, 1000)
-const renderer = new THREE.WebGLRenderer({antialias:true})
-renderer.setSize(window.innerWidth,600)
+const viewerContainer = document.getElementById("viewer")
+if(!viewerContainer) throw new Error('Viewer container "#viewer" not found')
+
+const getContainerSize = () => {
+  const width = Math.max(1, viewerContainer.clientWidth)
+  const height = Math.max(1, viewerContainer.clientHeight || 600)
+  return { width, height }
+}
+
+const { width, height } = getContainerSize()
+const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
+const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true})
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
+renderer.setSize(width, height)
+renderer.domElement.style.display = "block"
 renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.toneMapping = THREE.ACESFilmicToneMapping
 renderer.toneMappingExposure = 1.1
 renderer.outputColorSpace = THREE.SRGBColorSpace
-document.getElementById("viewer").appendChild(renderer.domElement)
+viewerContainer.appendChild(renderer.domElement)
+
+const resizeRenderer = () => {
+  const { width, height } = getContainerSize()
+  if (renderer.domElement.width !== width || renderer.domElement.height !== height) {
+    renderer.setSize(width, height, false)
+    camera.aspect = width / height
+    camera.updateProjectionMatrix()
+  }
+}
+
+if (typeof ResizeObserver !== 'undefined') {
+  new ResizeObserver(resizeRenderer).observe(viewerContainer)
+}
+window.addEventListener("resize", resizeRenderer)
 
 const ambient = new THREE.AmbientLight(0xffe0cc, 0.35)
 scene.add(ambient)
@@ -166,11 +192,100 @@ controls.target.set(0, 0.85, 0)
 controls.enableDamping = true
 controls.dampingFactor = 0.05
 
+const infoPanel = document.getElementById("infoPanel")
+const panelToggle = document.getElementById("panelToggle")
+const partTitle = document.getElementById("partTitle")
+const partDescription = document.getElementById("partDescription")
+const searchInput = document.getElementById("searchInput")
+const searchResults = document.getElementById("searchResults")
+
 const raycaster = new THREE.Raycaster()
 const pointer = new THREE.Vector2()
 const bodyMeshes = []
 const meshVolume = new Map()
 const meshMatName = new Map()
+
+let mouseDown = false
+let mouseStart = { x: 0, y: 0 }
+
+const expandPanel = () => {
+  if (infoPanel) infoPanel.classList.remove("collapsed")
+  if (panelToggle) panelToggle.textContent = "‹"
+  if (panelToggle) panelToggle.title = "Collapse info panel"
+}
+
+const collapsePanel = () => {
+  if (infoPanel) infoPanel.classList.add("collapsed")
+  if (panelToggle) panelToggle.textContent = "›"
+  if (panelToggle) panelToggle.title = "Expand info panel"
+  if (searchInput) searchInput.value = ""
+  if (searchResults) searchResults.innerHTML = ""
+}
+
+if (panelToggle) panelToggle.addEventListener("click", (event) => {
+  event.stopPropagation()
+  if (!infoPanel) return
+  infoPanel.classList.toggle("collapsed")
+  if (infoPanel.classList.contains("collapsed")) {
+    panelToggle.textContent = "›"
+    panelToggle.title = "Expand info panel"
+  } else {
+    panelToggle.textContent = "‹"
+    panelToggle.title = "Collapse info panel"
+  }
+})
+
+if (searchInput) searchInput.addEventListener("input", (event) => {
+  const query = event.target.value.toLowerCase().trim()
+  searchResults.innerHTML = ""
+  if (query.length < 2) return // Minimum 2 characters
+  const matches = bodyMeshes.filter(mesh => 
+    !cleanMeshName(mesh.name).toLowerCase().includes("fascia") &&
+    cleanMeshName(mesh.name).toLowerCase().includes(query)
+  ).sort((a, b) => cleanMeshName(a.name).length - cleanMeshName(b.name).length)
+  .slice(0, 10) // Limit to 10 results
+  if (matches.length > 0) {
+    expandPanel()
+  }
+  matches.forEach(mesh => {
+    const li = document.createElement("li")
+    li.textContent = cleanMeshName(mesh.name)
+    li.addEventListener("click", () => {
+      selectMesh(mesh)
+      searchInput.value = ""
+      searchResults.innerHTML = ""
+    })
+    searchResults.appendChild(li)
+  })
+})
+
+function deselectMesh() {
+  if (selectedMesh && originalMat) {
+    selectedMesh.material = originalMat
+    selectedMesh.renderOrder = originalRenderOrder
+    selectedMesh = null
+    originalMat = null
+    const { camPos, target } = getZoomOutPosition(lastHorizDir)
+    startCameraAnim(camPos, target, ZOOM_OUT_DURATION)
+    if (partTitle) partTitle.textContent = "Search or select a body part"
+    if (partDescription) partDescription.textContent = ""
+    collapsePanel()
+  }
+}
+
+function selectMesh(mesh) {
+  deselectMesh() // Deselect any current selection
+  const matName = meshMatName.get(mesh.uuid) ?? "Unknown"
+  originalMat = mesh.material
+  originalRenderOrder = mesh.renderOrder
+  selectedMesh = mesh
+  mesh.material = highlightMat
+  mesh.renderOrder = 999
+  const { camPos, meshCenter, horizDir } = getCameraPositionForMesh(mesh)
+  lastHorizDir.copy(horizDir)
+  startCameraAnim(camPos, meshCenter, ZOOM_IN_DURATION)
+  updateInfoPanel(mesh, matName)
+}
 
 const SPINE_X = 0
 const SPINE_Z = 0
@@ -392,51 +507,49 @@ function updateInfoPanel(mesh, matName) {
   console.log("Area:", area, `| y:${center.y.toFixed(3)} x:${center.x.toFixed(3)} z:${center.z.toFixed(3)}`)
 
   const displayName = cleanMeshName(mesh.name)
-  document.getElementById("partTitle").textContent = displayName
+  if (partTitle) partTitle.textContent = displayName
 
-  const descEl = document.getElementById("partDescription")
-  if(diagnoses && areaLabel) {
-    descEl.innerHTML = `<strong>Common ${areaLabel} Diagnoses:</strong><br>` +
-      diagnoses.map(d => `• ${d}`).join("<br>")
-  } else {
-    descEl.textContent = ""
+  if (partDescription) {
+    if(diagnoses && areaLabel) {
+      partDescription.innerHTML = `<strong>Common ${areaLabel} Diagnoses:</strong><br>` +
+        diagnoses.map(d => `• ${d}`).join("<br>")
+    } else {
+      partDescription.textContent = ""
+    }
   }
+
+  expandPanel()
 }
 
-renderer.domElement.addEventListener("click", (e) => {
+renderer.domElement.addEventListener("mousedown", (e) => {
+  mouseDown = true
+  mouseStart.x = e.clientX
+  mouseStart.y = e.clientY
+})
+
+renderer.domElement.addEventListener("mouseup", (e) => {
+  if (!mouseDown) return
+  mouseDown = false
+  const dx = e.clientX - mouseStart.x
+  const dy = e.clientY - mouseStart.y
+  const distance = Math.sqrt(dx * dx + dy * dy)
+  if (distance > 5) return // Ignore if dragged
+
   const rect = renderer.domElement.getBoundingClientRect()
   pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
   pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
   raycaster.setFromCamera(pointer, camera)
   const hits = raycaster.intersectObjects(bodyMeshes, false)
 
-  if(selectedMesh && originalMat){
-    selectedMesh.material = originalMat
-    selectedMesh.renderOrder = originalRenderOrder
-    selectedMesh = null; originalMat = null
-    const { camPos, target } = getZoomOutPosition(lastHorizDir)
-    startCameraAnim(camPos, target, ZOOM_OUT_DURATION)
-    document.getElementById("partTitle").textContent = "Select a body part"
-    document.getElementById("partDescription").textContent = ""
+  if (selectedMesh) {
+    deselectMesh()
     return
   }
 
-  if(hits.length > 0){
-    hits.sort((a, b) => (meshVolume.get(a.object.uuid) ?? Infinity) - (meshVolume.get(b.object.uuid) ?? Infinity))
-    const mesh = hits[0].object
-    const matName = meshMatName.get(mesh.uuid) ?? "Unknown"
-
-    originalMat = mesh.material
-    originalRenderOrder = mesh.renderOrder
-    selectedMesh = mesh
-    mesh.material = highlightMat
-    mesh.renderOrder = 999
-
-    const { camPos, meshCenter, horizDir } = getCameraPositionForMesh(mesh)
-    lastHorizDir.copy(horizDir)
-    startCameraAnim(camPos, meshCenter, ZOOM_IN_DURATION)
-
-    updateInfoPanel(mesh, matName)
+  const filteredHits = hits.filter(hit => !cleanMeshName(hit.object.name).toLowerCase().includes("fascia"))
+  if (filteredHits.length > 0) {
+    const mesh = filteredHits[0].object
+    selectMesh(mesh)
   }
 })
 
@@ -444,6 +557,7 @@ camera.position.copy(defaultCamPos)
 
 function animate(){
   requestAnimationFrame(animate)
+  resizeRenderer()
   if(animating){
     animT++
     const t = Math.min(animT / animDuration, 1)
