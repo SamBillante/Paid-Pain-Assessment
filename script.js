@@ -1,26 +1,14 @@
 /**
  * Pain Assessment Intake Form - JavaScript
- * Handles form validation, database connectivity, and form submission
+ * Handles form validation and form submission
  */
 
 // ==============================================================================
 // CONFIGURATION
 // ==============================================================================
 
-/**
- * Update these with your Supabase credentials
- * Replace 'your-project' with your actual Supabase project ID
- */
-const SUPABASE_CONFIG = {
-    
-};
-
-// Table name in Supabase
-const TABLE_NAME = 'pain_assessments';
-
-// Storage keys for localStorage fallback
+// Storage key for form draft
 const STORAGE_KEYS = {
-    submissions: 'intakeForm_submissions',
     draftForm: 'intakeForm_draft'
 };
 
@@ -239,100 +227,8 @@ function setButtonLoading(button, loading = true) {
 }
 
 // ==============================================================================
-// SUPABASE INTEGRATION
+// FORM HANDLING
 // ==============================================================================
-
-/**
- * Initialize Supabase client
- * Note: In production, use official Supabase JavaScript client
- */
-class SupabaseClient {
-    constructor(url, anonKey) {
-        this.url = url;
-        this.anonKey = anonKey;
-        this.isConfigured = url !== 'https://your-project.supabase.co' && anonKey !== 'your-anon-key-here';
-    }
-    
-    /**
-     * Insert a new record
-     */
-    async insert(table, data) {
-        if (!this.isConfigured) {
-            console.warn('Supabase not configured. Using localStorage fallback.');
-            return this.insertLocal(data);
-        }
-        
-        try {
-            const response = await fetch(
-                `${this.url}/rest/v1/${table}`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apikey': this.anonKey,
-                        'Prefer': 'return=representation'
-                    },
-                    body: JSON.stringify(data)
-                }
-            );
-            
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || 'Failed to submit form');
-            }
-            
-            const result = await response.json();
-            return { success: true, data: result };
-        } catch (error) {
-            console.error('Supabase error:', error);
-            // Fallback to localStorage
-            return this.insertLocal(data);
-        }
-    }
-    
-    /**
-     * Store submission in localStorage as fallback
-     */
-    insertLocal(data) {
-        try {
-            const submissions = JSON.parse(
-                localStorage.getItem(STORAGE_KEYS.submissions) || '[]'
-            );
-            
-            const submission = {
-                id: Date.now().toString(),
-                ...data,
-                submitted_at: new Date().toISOString(),
-                synced: false
-            };
-            
-            submissions.push(submission);
-            localStorage.setItem(STORAGE_KEYS.submissions, JSON.stringify(submissions));
-            
-            console.log('Form submitted to localStorage (pending sync)');
-            return { success: true, data: submission, local: true };
-        } catch (error) {
-            console.error('localStorage error:', error);
-            throw error;
-        }
-    }
-    
-    /**
-     * Get all submissions from localStorage
-     */
-    getLocalSubmissions() {
-        try {
-            return JSON.parse(
-                localStorage.getItem(STORAGE_KEYS.submissions) || '[]'
-            );
-        } catch (error) {
-            return [];
-        }
-    }
-}
-
-// Initialize Supabase client
-const supabase = new SupabaseClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
 
 // ==============================================================================
 // FORM HANDLING
@@ -341,12 +237,8 @@ const supabase = new SupabaseClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey
 /**
  * Convert camelCase to snake_case
  */
-function camelToSnakeCase(str) {
-    return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
-}
-
 /**
- * Collect form data and convert to snake_case for Supabase
+ * Collect form data
  */
 function collectFormData() {
     const form = document.getElementById('intakeForm');
@@ -374,19 +266,7 @@ function collectFormData() {
         }
     });
     
-    // Convert camelCase keys to snake_case for Supabase
-    const snakeCaseData = {};
-    Object.keys(data).forEach(key => {
-        const snakeKey = camelToSnakeCase(key);
-        snakeCaseData[snakeKey] = data[key];
-    });
-    
-    // Convert disclaimer_agreement to boolean
-    if (snakeCaseData.disclaimer_agreement) {
-        snakeCaseData.disclaimer_agreement = snakeCaseData.disclaimer_agreement === 'agree';
-    }
-    
-    return snakeCaseData;
+    return data;
 }
 
 /**
@@ -515,35 +395,25 @@ async function handleFormSubmit(event) {
     setButtonLoading(submitBtn, true);
     
     try {
-        // Submit to database
-        const result = await supabase.insert(TABLE_NAME, data);
+        // Clear draft
+        clearDraft();
         
-        if (result.success) {
-            // Clear draft
-            clearDraft();
+        // Show success message
+        showAlert('Form submitted successfully!', 'success');
+        
+        // Hide form and show confirmation screen
+        const form = document.getElementById('intakeForm');
+        const thankYouMsg = document.getElementById('thankYouMessage');
+        
+        if (form && thankYouMsg) {
+            form.style.display = 'none';
+            thankYouMsg.style.display = 'block';
+            thankYouMsg.classList.add('show');
             
-            // Show success message
-            showAlert(
-                result.local 
-                    ? 'Form submitted! (pending sync with database)'
-                    : 'Form submitted successfully!',
-                'success'
-            );
+            // Populate confirmation screen with submitted data
+            populateConfirmationScreen(data);
             
-            // Hide form and show confirmation screen
-            const form = document.getElementById('intakeForm');
-            const thankYouMsg = document.getElementById('thankYouMessage');
-            
-            if (form && thankYouMsg) {
-                form.style.display = 'none';
-                thankYouMsg.style.display = 'block';
-                thankYouMsg.classList.add('show');
-                
-                // Populate confirmation screen with submitted data
-                populateConfirmationScreen(data);
-                
-                thankYouMsg.scrollIntoView({ behavior: 'smooth' });
-            }
+            thankYouMsg.scrollIntoView({ behavior: 'smooth' });
         }
     } catch (error) {
         console.error('Form submission error:', error);
@@ -560,10 +430,6 @@ async function handleFormSubmit(event) {
  * Populate the confirmation screen with submitted data
  */
 function populateConfirmationScreen(data) {
-    // Extract first name for greeting
-    const firstName = data.fullName ? data.fullName.split(' ')[0] : 'Friend';
-    document.getElementById('confirmName').textContent = firstName;
-    
     // Populate summary fields
     document.getElementById('summaryName').textContent = data.fullName || 'Not provided';
     document.getElementById('summaryEmail').textContent = data.email || 'Not provided';
@@ -582,16 +448,16 @@ function populateConfirmationScreen(data) {
         : 'Not provided';
     document.getElementById('summaryWellnessGoal').textContent = goalsList;
     
-    // Consultation preference
+    // Consultation preference - match HTML values
     const sessionMap = {
-        '15min': '15-minute consultation',
-        '30min': '30-minute consultation',
-        '60min': '60-minute consultation'
+        'quick-check': 'Quick Pain Check (15 minutes)',
+        'movement-relief': 'Movement & Relief Session (30 minutes)',
+        'full-assessment': 'Full Wellness Assessment (60 minutes)'
     };
     const sessionDisplay = sessionMap[data.consultationPreference] || data.consultationPreference || 'Not provided';
     document.getElementById('summarySessions').textContent = sessionDisplay;
     
-    // Initialize Calendly container if URL is configured
+    // Initialize Calendly container
     initializeCalendly();
 }
 
@@ -608,10 +474,7 @@ function getPainLevelEmoji(painLevel) {
     return '😫';
 }
 
-/**
- * Initialize Calendly integration
- * Update CALENDLY_URL in configuration to enable
- */
+
 function initializeCalendly() {
     const CALENDLY_URL = 'https://calendly.com/goode-naturalleegoode/ortho-pain-assessment-call';
     
@@ -621,31 +484,21 @@ function initializeCalendly() {
     // Clear any existing content
     container.innerHTML = '';
     
-    // Create Calendly container
-    const calScriptUrl = `${CALENDLY_URL}?hide_event_type_details=1&hide_gdpr_block=1`;
+    // Create Calendly inline widget
+    const calDiv = document.createElement('div');
+    calDiv.className = 'calendly-inline-widget';
+    calDiv.setAttribute('data-url', CALENDLY_URL);
+    container.appendChild(calDiv);
     
     // Load Calendly script if not already loaded
     if (!window.Calendly) {
         const script = document.createElement('script');
         script.src = 'https://assets.calendly.com/assets/external/widget.js';
         script.async = true;
+        script.onload = function() {
+            // Widget will auto-initialize from data-url attribute
+        };
         document.head.appendChild(script);
-    }
-    
-    // Create Calendly inline widget
-    const calDiv = document.createElement('div');
-    calDiv.className = 'calendly-inline-widget';
-    calDiv.setAttribute('data-url', calScriptUrl);
-    calDiv.style.minHeight = '600px';
-    container.appendChild(calDiv);
-    
-    // If Calendly is already loaded, refresh the widget
-    if (window.Calendly) {
-        setTimeout(() => {
-            if (window.Calendly.initInlineWidget) {
-                window.Calendly.initInlineWidget({ url: calScriptUrl, parentElement: container });
-            }
-        }, 100);
     }
 }
 
