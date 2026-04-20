@@ -13,6 +13,17 @@ const STORAGE_KEYS = {
 };
 
 // ==============================================================================
+// EMAILJS CONFIGURATION
+// ==============================================================================
+// Replace these with your actual EmailJS credentials from emailjs.com
+// The sponsor will need to set up their own EmailJS account and provide these
+const EMAILJS_CONFIG = {
+    publicKey: 'YOUR_PUBLIC_KEY',      // Get from EmailJS dashboard
+    serviceId: 'YOUR_SERVICE_ID',      // Email service (Gmail, Outlook, etc.)
+    templateId: 'YOUR_TEMPLATE_ID'     // Email template ID
+};
+
+// ==============================================================================
 // FORM VALIDATION RULES
 // ==============================================================================
 
@@ -395,6 +406,40 @@ async function handleFormSubmit(event) {
     setButtonLoading(submitBtn, true);
     
     try {
+        // Send email notification via EmailJS
+        if (EMAILJS_CONFIG.publicKey !== 'YOUR_PUBLIC_KEY') {
+            // Initialize EmailJS with public key
+            emailjs.init(EMAILJS_CONFIG.publicKey);
+            
+            // Prepare email template parameters
+            const emailParams = {
+                to_email: 'goode@naturalleegoode.com',
+                from_name: data.fullName || 'Unknown',
+                from_email: data.email || 'Not provided',
+                phone: data.phone || 'Not provided',
+                body_area: data.selectedBodyArea || 'Not selected',
+                pain_side: data.painSide || 'Not specified',
+                pain_duration: data.painDuration || 'Not specified',
+                discomfort_type: data.discomfortType || 'Not specified',
+                pain_level: data.painLevel || 'Not specified',
+                triggers: data.triggers || 'None specified',
+                notes: data.notes || 'No notes provided',
+                wellness_goal: data.wellnessGoal || 'Not specified',
+                consultation_preference: data.consultationPreference || 'Not specified',
+                product_interest: data.productInterest || 'Not specified',
+                submitted_at: data.submitted_at || new Date().toISOString()
+            };
+            
+            // Send the email
+            await emailjs.send(
+                EMAILJS_CONFIG.serviceId,
+                EMAILJS_CONFIG.templateId,
+                emailParams
+            );
+            
+            console.log('Email notification sent successfully');
+        }
+        
         // Clear draft
         clearDraft();
         
