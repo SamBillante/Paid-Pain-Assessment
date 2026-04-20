@@ -312,7 +312,7 @@ function cleanMeshName(raw) {
     .replace(/\bveinl\b/gi, "vein")
     .replace(/\bveinr\b/gi, "vein")
     .replace(/\barteryl\b/gi, "artery")
-    .replace(/\barteryр\b/gi, "artery")
+    .replace(/\arteryр\b/gi, "artery")
     .replace(/\bSupinatorl\b/gi, "Supinator")
     .replace(/\bSupinatorr\b/gi, "Supinator")
     .replace(/\b\w/g, c => c.toUpperCase())
@@ -461,7 +461,6 @@ function updateInfoPanel(mesh, matName) {
     descEl.textContent = ""
   }
 
-  // Update hidden form field and notify intake form
   updateSelectedBodyInput(area)
   document.dispatchEvent(new CustomEvent('bodyAreaSelected', { detail: { area, label: areaLabel, meshName: cleanMeshName(mesh.name) } }))
 }
@@ -532,20 +531,6 @@ document.addEventListener('click', (event) => {
   if (!searchResults || !searchInput) return
   if (event.target === searchInput || searchResults.contains(event.target)) return
   clearSearchResults()
-})
-
-// Purple mode — triggered by secret button chain
-document.addEventListener('purpleMode', () => {
-  bodyMeshes.forEach(mesh => {
-    const matName = meshMatName.get(mesh.uuid) ?? ""
-    const isRed = !["Ligament","Tendon","Cartilage","Articular capsule","Bursa"].includes(matName)
-    if(isRed && mesh.material.color) {
-      mesh.material.color.setHex(0x7b2d8b)
-      if(mesh.material.emissive) mesh.material.emissive.setHex(0x3d0052)
-      mesh.material.emissiveIntensity = 0.15
-      mesh.material.needsUpdate = true
-    }
-  })
 })
 
 function animate(){
