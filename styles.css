@@ -1,3 +1,33 @@
+/* Fancy scan link buttons */
+
+.scan-link-btn,
+.scan-link-btn:visited,
+.scan-link-btn:active {
+    display: inline-block;
+    margin: 8px 12px 0 12px;
+    padding: 10px 28px;
+    font-size: 1rem;
+    background: #4CAF50;
+    color: white !important;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.05));
+    transition: background 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+.scan-link-btn:hover {
+    background: #377d39;
+    box-shadow: var(--shadow-md, 0 4px 6px rgba(0,0,0,0.1));
+    color: #fff;
+}
+
+.scan-link-btn:active {
+    background: #388e3c !important; /* A more appealing deep green */
+    color: #fff !important;
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.08));
+    border: none;
+}
 /* =============================================================================
    PAIN ASSESSMENT INTAKE FORM - STYLESHEET
    Inspired by Naturallee Goode wellness theme
