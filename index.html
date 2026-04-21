@@ -1,10 +1,1288 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pain Consultation Intake Form - Naturallee Goode</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Fancy scan link buttons */
+
+        .scan-link-btn,
+        .scan-link-btn:visited,
+        .scan-link-btn:active {
+            display: inline-block;
+            margin: 8px 12px 0 12px;
+            padding: 10px 28px;
+            font-size: 1rem;
+            background: #4CAF50;
+            color: white !important;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.05));
+            transition: background 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .scan-link-btn:hover {
+            background: #377d39;
+            box-shadow: var(--shadow-md, 0 4px 6px rgba(0, 0, 0, 0.1));
+            color: #fff;
+        }
+
+        .scan-link-btn:active {
+            background: #388e3c !important;
+            /* A more appealing deep green */
+            color: #fff !important;
+            box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.08));
+            border: none;
+        }
+
+        /* =============================================================================
+   PAIN ASSESSMENT INTAKE FORM - STYLESHEET
+   Inspired by Naturallee Goode wellness theme
+   ============================================================================= */
+
+        :root {
+            /* Primary Colors - Natural & Earthy */
+            --color-primary: #6B8E4E;
+            /* Sage Green */
+            --color-primary-dark: #556C3E;
+            /* Dark Green */
+            --color-primary-light: #8BA85E;
+            /* Light Green */
+            --color-secondary: #D4A574;
+            /* Warm Tan */
+            --color-accent: #E8D4C4;
+            /* Cream */
+
+            /* Neutral Colors */
+            --color-text: #333333;
+            /* Dark Gray */
+            --color-text-light: #666666;
+            /* Medium Gray */
+            --color-border: #DCDCDC;
+            /* Light Gray */
+            --color-background: #F9F7F4;
+            /* Off White/Cream */
+            --color-white: #FFFFFF;
+
+            /* Status Colors */
+            --color-success: #5A9E6F;
+            /* Green */
+            --color-error: #C84B31;
+            /* Rust/Red */
+            --color-warning: #D4A574;
+            /* Tan */
+            --color-info: #6B8E4E;
+            /* Sage Green */
+
+            /* Typography */
+            --font-family-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-family-serif: 'Georgia', 'Garamond', serif;
+
+            --font-size-base: 16px;
+            --font-size-sm: 14px;
+            --font-size-lg: 18px;
+            --font-size-xl: 24px;
+            --font-size-2xl: 32px;
+
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-bold: 700;
+
+            /* Spacing */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+
+            /* Transitions */
+            --transition-fast: 0.15s ease;
+            --transition-base: 0.3s ease;
+        }
+
+        /* =============================================================================
+   RESET & BASE STYLES
+   ============================================================================= */
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family-primary);
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+            color: var(--color-text);
+            background-color: var(--color-background);
+        }
+
+        /* =============================================================================
+   CONTAINER & LAYOUT
+   ============================================================================= */
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-md);
+            }
+        }
+
+        /* =============================================================================
+   TYPOGRAPHY
+   ============================================================================= */
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: var(--font-family-serif);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--spacing-md);
+            color: var(--color-primary-dark);
+        }
+
+        h1 {
+            font-size: var(--font-size-2xl);
+            line-height: 1.2;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        h2 {
+            font-size: var(--font-size-xl);
+            margin-top: var(--spacing-xl);
+        }
+
+        h3 {
+            font-size: var(--font-size-lg);
+        }
+
+        p {
+            margin-bottom: var(--spacing-md);
+        }
+
+        small {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-light);
+        }
+
+        /* =============================================================================
+   FORM HEADER
+   ============================================================================= */
+
+        .form-header {
+            text-align: center;
+            margin-bottom: var(--spacing-2xl);
+            padding-bottom: var(--spacing-xl);
+            border-bottom: 2px solid var(--color-primary);
+        }
+
+        .form-header h1 {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .subtitle {
+            font-size: var(--font-size-lg);
+            color: var(--color-text-light);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* =============================================================================
+   FORM STYLES
+   ============================================================================= */
+
+        .intake-form {
+            background-color: var(--color-white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: var(--spacing-xl);
+        }
+
+        @media (max-width: 768px) {
+            .intake-form {
+                padding: var(--spacing-lg);
+            }
+        }
+
+        /* Fieldset Styles */
+
+        fieldset {
+            margin-bottom: var(--spacing-xl);
+            padding-bottom: var(--spacing-xl);
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        fieldset:last-of-type {
+            border-bottom: none;
+        }
+
+        legend {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-primary);
+            padding-bottom: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            border-bottom: 2px solid var(--color-accent);
+            display: block;
+            width: 100%;
+        }
+
+        .field-description {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-light);
+            margin-bottom: var(--spacing-md);
+            font-style: italic;
+        }
+
+        /* Form Row & Groups */
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Labels */
+
+        label {
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text);
+            margin-bottom: var(--spacing-sm);
+            display: block;
+            font-size: var(--font-size-base);
+        }
+
+        /* Input & Select Elements */
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="number"],
+        select,
+        textarea {
+            font-family: var(--font-family-primary);
+            font-size: var(--font-size-base);
+            line-height: 1.5;
+            padding: var(--spacing-md);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            background-color: var(--color-white);
+            color: var(--color-text);
+            transition: all var(--transition-base);
+            width: 100%;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="date"]:focus,
+        input[type="number"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(107, 142, 78, 0.1);
+            background-color: var(--color-white);
+        }
+
+        input[type="text"]:disabled,
+        input[type="email"]:disabled,
+        input[type="tel"]:disabled,
+        input[type="date"]:disabled,
+        input[type="number"]:disabled,
+        select:disabled,
+        textarea:disabled {
+            background-color: #F5F5F5;
+            color: var(--color-text-light);
+            cursor: not-allowed;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right var(--spacing-md) center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: var(--font-family-primary);
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: var(--color-text-light);
+        }
+
+        .viewer-search {
+            position: relative;
+        }
+
+        .viewer-search input {
+            position: relative;
+            z-index: 2;
+        }
+
+        #searchResults {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            z-index: 10;
+            display: none;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            max-height: 240px;
+            overflow-y: auto;
+            background: var(--color-white);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+        }
+
+        #searchResults.visible {
+            display: block;
+        }
+
+        .search-result-item,
+        .search-empty {
+            padding: 12px 16px;
+            font-size: var(--font-size-sm);
+            color: var(--color-text);
+            cursor: pointer;
+        }
+
+        .search-empty {
+            cursor: default;
+            color: var(--color-text-light);
+        }
+
+        .search-result-item:hover,
+        .search-result-item:focus {
+            background: rgba(106, 142, 78, 0.08);
+            color: var(--color-primary-dark);
+        }
+
+        /* Error States */
+
+        input.error,
+        select.error,
+        textarea.error {
+            border-color: var(--color-error);
+            background-color: rgba(200, 75, 49, 0.05);
+        }
+
+        input.error:focus,
+        select.error:focus,
+        textarea.error:focus {
+            box-shadow: 0 0 0 3px rgba(200, 75, 49, 0.1);
+        }
+
+        .error-message {
+            color: var(--color-error);
+            font-size: var(--font-size-sm);
+            margin-top: var(--spacing-sm);
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Range Slider */
+
+        .pain-scale {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(to right, #5A9E6F, #D4A574, #C84B31);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            cursor: pointer;
+            border: 2px solid var(--color-white);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-fast);
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+            box-shadow: var(--shadow-lg);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            cursor: pointer;
+            border: 2px solid var(--color-white);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-fast);
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.15);
+            box-shadow: var(--shadow-lg);
+        }
+
+        #painValue {
+            min-width: 40px;
+            text-align: center;
+            font-weight: var(--font-weight-bold);
+            color: var(--color-primary);
+            font-size: var(--font-size-lg);
+        }
+
+        /* Checkbox & Radio Styles */
+
+        .checkbox-group,
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg) var(--spacing-xl);
+            margin-top: var(--spacing-md);
+        }
+
+        .checkbox-label,
+        .radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: var(--font-weight-normal);
+            margin-bottom: 0;
+        }
+
+        .checkbox-label input[type="checkbox"],
+        .radio-label input[type="radio"] {
+            width: auto;
+            margin-right: var(--spacing-md);
+            cursor: pointer;
+            accent-color: var(--color-primary);
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .checkbox-label input[type="checkbox"]:focus,
+        .radio-label input[type="radio"]:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Body Map Styling */
+        .body-map {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+
+        /* Side Selector */
+        .side-selector {
+            margin-top: var(--spacing-lg);
+            padding: var(--spacing-md);
+            background-color: var(--color-accent);
+            border-radius: var(--radius-md);
+        }
+
+        .side-selector .radio-group {
+            display: flex;
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-sm);
+        }
+
+        /* Radio Groups */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        @media (max-width: 768px) {
+            .radio-group {
+                gap: var(--spacing-sm);
+            }
+        }
+
+        /* Consent Group */
+
+        .consent-group {
+            background-color: var(--color-accent);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .consent-group .checkbox-label {
+            font-size: var(--font-size-sm);
+        }
+
+        /* =============================================================================
+   BUTTONS
+   ============================================================================= */
+
+        .btn {
+            display: inline-block;
+            padding: var(--spacing-md) var(--spacing-lg);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            text-align: center;
+            text-decoration: none;
+            font-family: var(--font-family-primary);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--color-primary-dark);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-border);
+            color: var(--color-text);
+            border: 2px solid var(--color-primary);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background-color: var(--color-accent);
+            border-color: var(--color-primary-dark);
+        }
+
+        .btn-secondary:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        /* Form Actions */
+
+        .form-actions {
+            display: flex;
+            gap: var(--spacing-lg);
+            justify-content: center;
+            margin-top: var(--spacing-2xl);
+            padding-top: var(--spacing-xl);
+            border-top: 1px solid var(--color-border);
+        }
+
+        @media (max-width: 768px) {
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .form-actions .btn {
+                width: 100%;
+            }
+        }
+
+        /* Required Note */
+
+        .required-note {
+            text-align: center;
+            font-size: var(--font-size-sm);
+            color: var(--color-text-light);
+            margin-top: var(--spacing-lg);
+            margin-bottom: 0;
+        }
+
+        /* =============================================================================
+   SUCCESS & ERROR MESSAGES
+   ============================================================================= */
+
+        .alert {
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+            border-left: 4px solid;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert-success {
+            background-color: rgba(90, 158, 111, 0.1);
+            color: var(--color-success);
+            border-left-color: var(--color-success);
+        }
+
+        .alert-error {
+            background-color: rgba(200, 75, 49, 0.1);
+            color: var(--color-error);
+            border-left-color: var(--color-error);
+        }
+
+        .alert-warning {
+            background-color: rgba(212, 165, 116, 0.1);
+            color: var(--color-warning);
+            border-left-color: var(--color-warning);
+        }
+
+        .alert-info {
+            background-color: rgba(107, 142, 78, 0.1);
+            color: var(--color-info);
+            border-left-color: var(--color-info);
+        }
+
+        /* =============================================================================
+   ANIMATIONS
+   ============================================================================= */
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(107, 142, 78, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--color-primary);
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* =============================================================================
+   LOADING STATE
+   ============================================================================= */
+
+        .btn.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            transform: translate(-50%, -50%);
+        }
+
+        /* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: var(--font-size-xl);
+            }
+
+            .form-header {
+                margin-bottom: var(--spacing-xl);
+                padding-bottom: var(--spacing-lg);
+            }
+
+            .subtitle {
+                font-size: var(--font-size-base);
+            }
+
+            legend {
+                font-size: var(--font-size-base);
+            }
+
+            .checkbox-group,
+            .radio-group {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* =============================================================================
+   PRINT STYLES
+   ============================================================================= */
+
+        @media print {
+            body {
+                background-color: white;
+            }
+
+            .form-actions,
+            .btn {
+                display: none;
+            }
+
+            .intake-form {
+                box-shadow: none;
+                border: 1px solid var(--color-border);
+            }
+        }
+
+        /* =============================================================================
+   CONFIRMATION SCREEN
+   ============================================================================= */
+
+        .thank-you-message {
+            display: none;
+            padding: var(--spacing-lg);
+        }
+
+        .thank-you-message.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .confirmation-screen {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--color-white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        /* Confirmation Header */
+        .confirmation-header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #5a7642 100%);
+            color: var(--color-white);
+            padding: var(--spacing-2xl);
+            text-align: center;
+        }
+
+        .confirmation-header h2 {
+            margin: 0;
+            font-size: var(--font-size-2xl);
+        }
+
+        .confirmation-subtitle {
+            margin: var(--spacing-md) 0 0 0;
+            opacity: 0.95;
+            font-size: var(--font-size-lg);
+        }
+
+        /* Confirmation Sections */
+        .confirmation-section {
+            padding: var(--spacing-lg) var(--spacing-2xl);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .confirmation-section h3 {
+            color: var(--color-primary);
+            margin-top: 0;
+            margin-bottom: var(--spacing-lg);
+            font-size: var(--font-size-xl);
+        }
+
+        .confirmation-section:last-of-type {
+            border-bottom: none;
+        }
+
+        /* Summary Grid */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .summary-item {
+            padding: var(--spacing-md);
+            background-color: var(--color-light);
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--color-secondary);
+        }
+
+        .summary-item label {
+            display: block;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-sm);
+            font-size: var(--font-size-sm);
+        }
+
+        .summary-item p {
+            margin: 0;
+            color: var(--color-text);
+            font-size: var(--font-size-md);
+        }
+
+        /* Calendly Section */
+        .calendly-section {
+            background-color: #f9f7f4;
+            padding: var(--spacing-md) var(--spacing-2xl) var(--spacing-lg);
+            border-bottom: none;
+        }
+
+        .calendly-section h3 {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .section-description {
+            color: var(--color-text);
+            margin-bottom: var(--spacing-md);
+            font-size: var(--font-size-md);
+        }
+
+        .calendly-container {
+            width: 100%;
+            height: 700px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .calendly-container .calendly-inline-widget {
+            flex: 1;
+            width: 100%;
+            min-height: 100%;
+        }
+
+        .calendly-placeholder {
+            text-align: center;
+            color: var(--color-secondary);
+        }
+
+        .placeholder-icon {
+            font-size: 48px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .calendly-placeholder p {
+            margin: var(--spacing-sm) 0;
+            font-size: var(--font-size-md);
+        }
+
+        .placeholder-note {
+            font-size: var(--font-size-sm);
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        .calendly-instructions {
+            background-color: var(--color-white);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--color-secondary);
+            font-size: var(--font-size-sm);
+            color: var(--color-text);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .calendly-instructions strong {
+            color: var(--color-primary);
+        }
+
+        .calendly-instructions p {
+            margin: var(--spacing-sm) 0;
+        }
+
+        /* Next Steps */
+        .next-steps ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .next-steps li {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background-color: var(--color-light);
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--color-secondary);
+        }
+
+        .next-steps li:before {
+            content: "✓";
+            color: var(--color-primary);
+            font-weight: bold;
+            font-size: var(--font-size-lg);
+            min-width: 24px;
+            text-align: center;
+        }
+
+        /* Info Section */
+        .info-section {
+            background-color: var(--color-light);
+            border-left: 4px solid var(--color-secondary);
+        }
+
+        .info-text {
+            margin: 0 0 var(--spacing-lg) 0;
+            color: var(--color-text);
+            font-size: var(--font-size-md);
+            line-height: 1.6;
+        }
+
+        .contact-info {
+            padding: var(--spacing-md);
+            background-color: var(--color-white);
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--color-secondary);
+        }
+
+        .contact-info p {
+            margin: 0;
+            color: var(--color-primary);
+            font-weight: 550;
+        }
+
+        /* Confirmation Actions */
+        .confirmation-actions {
+            padding: var(--spacing-xl) var(--spacing-2xl);
+            text-align: center;
+            background-color: var(--color-light);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-secondary);
+            color: var(--color-text);
+            padding: var(--spacing-md) var(--spacing-2xl);
+            border: 2px solid var(--color-secondary);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: transparent;
+            color: var(--color-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(212, 165, 116, 0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .confirmation-screen {
+                border-radius: 0;
+            }
+
+            .confirmation-header,
+            .confirmation-section {
+                padding: var(--spacing-lg);
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendly-container {
+                height: 600px;
+            }
+
+            .confirmation-header h2 {
+                font-size: var(--font-size-xl);
+            }
+        }
+
+        /* =============================================================================
+   3D BODY VIEWER STYLES
+   ============================================================================= */
+
+        .viewer-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: #000;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        #viewer {
+            width: 100%;
+            height: min(70vh, 760px);
+            max-height: 80vh;
+            min-height: 420px;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            #viewer {
+                height: min(50vh, 420px);
+                min-height: 320px;
+            }
+        }
+
+        /* Loading overlay */
+        .viewer-loading {
+            position: absolute;
+            inset: 0;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .loading-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            width: 220px;
+        }
+
+        .loading-label {
+            color: #fff;
+            font-family: var(--font-family-primary);
+            font-size: 13px;
+            letter-spacing: 0.05em;
+        }
+
+        .loading-bar-track {
+            width: 100%;
+            height: 3px;
+            background: #333;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loading-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--color-primary);
+            border-radius: 2px;
+            transition: width 0.15s ease;
+        }
+
+        .loading-percent {
+            color: #888;
+            font-family: var(--font-family-primary);
+            font-size: 11px;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 1.0;
+            }
+        }
+
+        /* Info panel — sits below the canvas */
+        .viewer-info-panel {
+            position: relative;
+            background: var(--color-background);
+            border-top: 2px solid var(--color-primary);
+            display: flex;
+            align-items: stretch;
+            transition: max-height 0.3s ease;
+            max-height: 300px;
+            overflow: hidden;
+        }
+
+        .viewer-info-panel.collapsed {
+            max-height: 42px;
+        }
+
+        .panel-toggle {
+            flex-shrink: 0;
+            width: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-primary);
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            user-select: none;
+            border-right: 1px solid var(--color-primary-dark);
+            writing-mode: vertical-lr;
+            letter-spacing: 2px;
+        }
+
+        .panel-toggle:hover {
+            background: var(--color-primary-dark);
+        }
+
+        .viewer-info-content {
+            flex: 1;
+            padding: var(--spacing-md);
+            overflow-y: auto;
+        }
+
+        .viewer-part-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-primary-dark);
+            margin-bottom: var(--spacing-sm);
+            font-family: var(--font-family-serif);
+        }
+
+        .viewer-part-description {
+            font-size: var(--font-size-sm);
+            color: var(--color-text);
+            line-height: 1.5;
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* Search */
+        .viewer-search {
+            position: relative;
+        }
+
+        .viewer-search input[type="text"] {
+            font-size: var(--font-size-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            width: 100%;
+        }
+
+        .viewer-search input[type="text"]:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(107, 142, 78, 0.15);
+        }
+
+        #searchResults {
+            list-style: none;
+            margin: var(--spacing-xs) 0 0 0;
+            padding: 0;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            background: var(--color-white);
+            max-height: 160px;
+            overflow-y: auto;
+        }
+
+        #searchResults li {
+            padding: var(--spacing-sm) var(--spacing-md);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            color: var(--color-text);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        #searchResults li:last-child {
+            border-bottom: none;
+        }
+
+        #searchResults li:hover {
+            background: var(--color-accent);
+            color: var(--color-primary-dark);
+        }
+
+        #searchResults:empty {
+            display: none;
+        }
+    </style>
     <!-- EmailJS SDK for sending form submissions via email -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="importmap">
@@ -16,15 +1294,18 @@
     }
     </script>
 </head>
+
 <body>
     <div class="container">
         <div class="form-header">
             <h1>Pain Consultation Intake Form</h1>
             <p class="subtitle">Where does it hurt?</p>
             <p class="form-description"><em>For wellness education and movement support (non-medical)</em></p>
-            <p class="form-description">Please complete this short intake to help us better understand what your body is experiencing. Your responses allow us to personalize your wellness consultation.</p>
+            <p class="form-description">Please complete this short intake to help us better understand what your body is
+                experiencing. Your responses allow us to personalize your wellness consultation.</p>
             <div class="form-description" style="margin-bottom:18px;">
-                <strong>If you would like to perform a scan to gain insight into your pain, please proceed here:</strong>
+                <strong>If you would like to perform a scan to gain insight into your pain, please proceed
+                    here:</strong>
                 <br>
                 <a href="upperbodyscan.html" class="scan-link-btn">Upper Body Scan</a>
                 <a href="lowerbodyscan.html" class="scan-link-btn">Lower Body Scan</a>
@@ -38,12 +1319,12 @@
             <!-- Section 1: Contact Information -->
             <fieldset>
                 <legend>1. Contact Information</legend>
-                
+
                 <div class="form-group">
                     <label for="fullName">Full Name *</label>
                     <input type="text" id="fullName" name="fullName" required>
                 </div>
-                
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="email">Email Address *</label>
@@ -59,7 +1340,8 @@
             <!-- Section 2: Interactive Body Map -->
             <fieldset>
                 <legend>2. Interactive Body Map</legend>
-                <p class="field-description">Click or tap a body part to select it. Your selection will appear below.</p>
+                <p class="field-description">Click or tap a body part to select it. Your selection will appear below.
+                </p>
 
                 <!-- 3D Viewer -->
                 <div class="viewer-wrapper">
@@ -196,7 +1478,8 @@
 
                 <div class="form-group">
                     <label for="notes">Brief notes about work, activity level, or daily routine (optional):</label>
-                    <textarea id="notes" name="notes" rows="3" placeholder="Tell us about your typical day..."></textarea>
+                    <textarea id="notes" name="notes" rows="3"
+                        placeholder="Tell us about your typical day..."></textarea>
                 </div>
             </fieldset>
 
@@ -211,13 +1494,15 @@
                             <input type="checkbox" name="wellnessGoal" value="reducing-pain"> Reducing pain or soreness
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="wellnessGoal" value="moving-comfortably"> Moving more comfortably
+                            <input type="checkbox" name="wellnessGoal" value="moving-comfortably"> Moving more
+                            comfortably
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" name="wellnessGoal" value="posture"> Improving posture
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="wellnessGoal" value="recovery"> Recovery from daily activity or workouts
+                            <input type="checkbox" name="wellnessGoal" value="recovery"> Recovery from daily activity or
+                            workouts
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" name="wellnessGoal" value="long-term"> Long-term comfort and mobility
@@ -234,13 +1519,16 @@
                     <label>Which session are you most interested in? *</label>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="radio" name="consultationPreference" value="quick-check"> Quick Pain Check (15 minutes)
+                            <input type="radio" name="consultationPreference" value="quick-check"> Quick Pain Check (15
+                            minutes)
                         </label>
                         <label class="checkbox-label">
-                            <input type="radio" name="consultationPreference" value="movement-relief"> Movement & Relief Session (30 minutes)
+                            <input type="radio" name="consultationPreference" value="movement-relief"> Movement & Relief
+                            Session (30 minutes)
                         </label>
                         <label class="checkbox-label">
-                            <input type="radio" name="consultationPreference" value="full-assessment"> Full Wellness Assessment (60 minutes)
+                            <input type="radio" name="consultationPreference" value="full-assessment"> Full Wellness
+                            Assessment (60 minutes)
                         </label>
                     </div>
                 </div>
@@ -273,7 +1561,8 @@
                 <div class="form-group consent-group">
                     <label class="checkbox-label">
                         <input type="checkbox" name="disclaimerAgreement" value="agree" required>
-                        I understand this wellness consultation is for education, movement support, and self-care guidance only. It is not medical diagnosis or treatment. *
+                        I understand this wellness consultation is for education, movement support, and self-care
+                        guidance only. It is not medical diagnosis or treatment. *
                     </label>
                 </div>
             </fieldset>
@@ -330,7 +1619,8 @@
                 <!-- Calendly Booking Section -->
                 <div class="confirmation-section calendly-section">
                     <h3>Book Your Consultation</h3>
-                    <p class="section-description">Schedule your personalized wellness consultation below. Choose a time that works best for you.</p>
+                    <p class="section-description">Schedule your personalized wellness consultation below. Choose a time
+                        that works best for you.</p>
                     <div class="calendly-container" id="calendlyContainer"></div>
                 </div>
 
@@ -340,13 +1630,15 @@
                     <ul>
                         <li><strong>Step 1:</strong> Book your consultation using the calendar above</li>
                         <li><strong>Step 2:</strong> You'll receive a confirmation email with session details</li>
-                        <li><strong>Step 3:</strong> We'll prepare personalized recommendations based on your intake</li>
+                        <li><strong>Step 3:</strong> We'll prepare personalized recommendations based on your intake
+                        </li>
                     </ul>
                 </div>
 
                 <!-- Additional Info -->
                 <div class="confirmation-section info-section">
-                    <p class="info-text">We look forward to supporting your wellness journey. If you have any questions, please don't hesitate to reach out.</p>
+                    <p class="info-text">We look forward to supporting your wellness journey. If you have any questions,
+                        please don't hesitate to reach out.</p>
                     <div class="contact-info">
                         <p><strong>Questions?</strong> Contact us at info@naturalleegoode.com</p>
                     </div>
@@ -361,7 +1653,1069 @@
 
     </div>
 
-    <script src="script.js"></script>
-    <script type="module" src="viewer.js"></script>
+    <script>/**
+* Pain Assessment Intake Form - JavaScript
+* Refactored to avoid long-term storage of form data.
+* Data is collected only at submission time and sent via EmailJS.
+*/
+
+        // ==============================================================================
+        // EMAILJS CONFIGURATION
+        // ==============================================================================
+        // Replace these with your actual EmailJS credentials from emailjs.com
+        const EMAILJS_CONFIG = {
+            publicKey: 'QSHhS2k1y5xW4eKmm',
+            serviceId: 'service_pzvgdz8',
+            templateId: 'template_uhhy7rd'
+        };
+
+        // ==============================================================================
+        // FORM VALIDATION RULES
+        // ==============================================================================
+
+        const validationRules = {
+            fullName: {
+                required: true,
+                minLength: 2,
+                pattern: /^[a-zA-Z\s'-]+$/,
+                message: 'Please enter a valid name'
+            },
+            email: {
+                required: true,
+                pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: 'Please enter a valid email address'
+            },
+            phone: {
+                required: true,
+                pattern: /^[\d\s\-\(\)\+\.]+$/,
+                minLength: 10,
+                message: 'Please enter a valid phone number'
+            },
+            painLevel: {
+                required: true,
+                message: 'Please rate your pain level'
+            },
+            wellnessGoal: {
+                required: true,
+                message: 'Please select at least one wellness goal'
+            },
+            consultationPreference: {
+                required: true,
+                message: 'Please select a consultation preference'
+            },
+            disclaimerAgreement: {
+                required: true,
+                message: 'You must agree to the disclaimer to proceed'
+            }
+        };
+
+        // ==============================================================================
+        // UTILITY FUNCTIONS
+        // ==============================================================================
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function formatPhoneNumber(phone) {
+            const cleaned = phone.replace(/\D/g, '');
+            const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+            if (match) {
+                return `(${match[1]}) ${match[2]}-${match[3]}`;
+            }
+            return phone;
+        }
+
+        function validateField(fieldName, value) {
+            const rules = validationRules[fieldName];
+
+            if (!rules) return { valid: true };
+
+            if (rules.required && !value) {
+                return {
+                    valid: false,
+                    message: rules.message || `${capitalize(fieldName)} is required`
+                };
+            }
+
+            if (!value) return { valid: true };
+
+            if (rules.minLength && value.length < rules.minLength) {
+                return {
+                    valid: false,
+                    message: rules.message || `Minimum ${rules.minLength} characters required`
+                };
+            }
+
+            if (rules.maxLength && value.length > rules.maxLength) {
+                return {
+                    valid: false,
+                    message: rules.message || `Maximum ${rules.maxLength} characters allowed`
+                };
+            }
+
+            if (rules.pattern && !rules.pattern.test(value)) {
+                return {
+                    valid: false,
+                    message: rules.message
+                };
+            }
+
+            if (rules.min !== undefined && parseFloat(value) < rules.min) {
+                return {
+                    valid: false,
+                    message: rules.message || `Must be at least ${rules.min}`
+                };
+            }
+
+            if (rules.max !== undefined && parseFloat(value) > rules.max) {
+                return {
+                    valid: false,
+                    message: rules.message || `Must be no more than ${rules.max}`
+                };
+            }
+
+            if (rules.custom && !rules.custom(value)) {
+                return {
+                    valid: false,
+                    message: rules.message
+                };
+            }
+
+            return { valid: true };
+        }
+
+        function showFieldError(fieldName, message) {
+            const field = document.getElementById(fieldName);
+            if (!field) return;
+
+            field.classList.add('error');
+
+            let errorElement = field.parentElement.querySelector('.error-message');
+            if (!errorElement) {
+                errorElement = document.createElement('div');
+                errorElement.className = 'error-message';
+                field.parentElement.appendChild(errorElement);
+            }
+
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+        }
+
+        function clearFieldError(fieldName) {
+            const field = document.getElementById(fieldName);
+            if (!field) return;
+
+            field.classList.remove('error');
+
+            const errorElement = field.parentElement.querySelector('.error-message');
+            if (errorElement) {
+                errorElement.classList.remove('show');
+                errorElement.textContent = '';
+            }
+        }
+
+        function showAlert(message, type = 'info') {
+            let alertElement = document.querySelector('.alert');
+
+            if (!alertElement) {
+                alertElement = document.createElement('div');
+                alertElement.className = 'alert';
+                const form = document.querySelector('.intake-form');
+                if (form) {
+                    form.insertBefore(alertElement, form.firstChild);
+                }
+            }
+
+            if (!alertElement) return;
+
+            alertElement.textContent = message;
+            alertElement.className = `alert alert-${type} show`;
+            alertElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            setTimeout(() => {
+                alertElement.classList.remove('show');
+            }, 5000);
+        }
+
+        function setButtonLoading(button, loading = true) {
+            if (!button) return;
+
+            if (loading) {
+                button.classList.add('loading');
+                button.disabled = true;
+            } else {
+                button.classList.remove('loading');
+                button.disabled = false;
+            }
+        }
+
+        // ==============================================================================
+        // FORM HANDLING
+        // ==============================================================================
+
+        function collectFormData() {
+            const form = document.getElementById('intakeForm');
+            const formData = new FormData(form);
+            const data = {};
+
+            formData.forEach((value, key) => {
+                if (data[key]) {
+                    if (Array.isArray(data[key])) {
+                        data[key].push(value);
+                    } else {
+                        data[key] = [data[key], value];
+                    }
+                } else {
+                    data[key] = value;
+                }
+            });
+
+            Object.keys(data).forEach(key => {
+                if (Array.isArray(data[key])) {
+                    data[key] = data[key].join(', ');
+                }
+            });
+
+            return data;
+        }
+
+        function validateForm() {
+            const form = document.getElementById('intakeForm');
+            const fields = form.querySelectorAll('input, select, textarea');
+            let isValid = true;
+            const errors = {};
+            const checkedFields = new Set();
+
+            fields.forEach(field => {
+                if (!field.name) return;
+
+                if (checkedFields.has(field.name)) {
+                    return;
+                }
+
+                let value = field.value.trim();
+
+                if ((field.type === 'checkbox' || field.type === 'radio') && field.name) {
+                    const inputs = form.querySelectorAll(`[name="${field.name}"]`);
+                    checkedFields.add(field.name);
+
+                    if (validationRules[field.name]?.required) {
+                        const isChecked = Array.from(inputs).some(input => input.checked);
+                        value = isChecked ? 'selected' : '';
+                    } else {
+                        const isChecked = Array.from(inputs).some(input => input.checked);
+                        value = isChecked ? 'selected' : '';
+                    }
+                }
+
+                const validation = validateField(field.name, value);
+
+                if (!validation.valid) {
+                    isValid = false;
+                    errors[field.name] = validation.message;
+                    showFieldError(field.name, validation.message);
+                } else {
+                    clearFieldError(field.name);
+                }
+            });
+
+            return { valid: isValid, errors };
+        }
+
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const validation = validateForm();
+            if (!validation.valid) {
+                showAlert('Please fix the errors above', 'error');
+                return;
+            }
+
+            const data = collectFormData();
+
+            data.submitted_at = new Date().toISOString();
+            data.user_agent = navigator.userAgent;
+
+            const submitBtn = document.querySelector('#intakeForm [type="submit"]');
+            setButtonLoading(submitBtn, true);
+
+            try {
+                if (!window.emailjs) {
+                    throw new Error('EmailJS library is not loaded.');
+                }
+
+                if (
+                    !EMAILJS_CONFIG.publicKey ||
+                    !EMAILJS_CONFIG.serviceId ||
+                    !EMAILJS_CONFIG.templateId
+                ) {
+                    throw new Error('EmailJS configuration is incomplete.');
+                }
+
+                emailjs.init(EMAILJS_CONFIG.publicKey);
+
+                const emailParams = {
+                    to_email: 'goode@naturalleegoode.com',
+                    from_name: data.fullName || 'Unknown',
+                    from_email: data.email || 'Not provided',
+                    phone: data.phone || 'Not provided',
+                    body_area: data.selectedBodyArea || 'Not selected',
+                    pain_side: data.painSide || 'Not specified',
+                    pain_duration: data.painDuration || 'Not specified',
+                    discomfort_type: data.discomfortType || 'Not specified',
+                    pain_level: data.painLevel || 'Not specified',
+                    triggers: data.triggers || 'None specified',
+                    notes: data.notes || 'No notes provided',
+                    wellness_goal: data.wellnessGoal || 'Not specified',
+                    consultation_preference: data.consultationPreference || 'Not specified',
+                    product_interest: data.productInterest || 'Not specified',
+                    submitted_at: data.submitted_at
+                };
+
+                await emailjs.send(
+                    EMAILJS_CONFIG.serviceId,
+                    EMAILJS_CONFIG.templateId,
+                    emailParams
+                );
+
+                showAlert('Form submitted successfully!', 'success');
+
+                const form = document.getElementById('intakeForm');
+                const thankYouMsg = document.getElementById('thankYouMessage');
+
+                if (form && thankYouMsg) {
+                    form.style.display = 'none';
+                    thankYouMsg.style.display = 'block';
+                    thankYouMsg.classList.add('show');
+
+                    populateConfirmationScreen(data);
+                    thankYouMsg.scrollIntoView({ behavior: 'smooth' });
+                }
+
+                // Clear visible form fields after successful submission.
+                // No data is persisted locally.
+                /* if (form) {
+                    form.reset();
+                } */
+            } catch (error) {
+                console.error('Form submission error:', error);
+                showAlert(
+                    'An error occurred while submitting the form. Please try again.',
+                    'error'
+                );
+            } finally {
+                setButtonLoading(submitBtn, false);
+            }
+        }
+
+        function populateConfirmationScreen(data) {
+            const summaryName = document.getElementById('summaryName');
+            const summaryEmail = document.getElementById('summaryEmail');
+            const summaryPhone = document.getElementById('summaryPhone');
+            const summaryPainLevel = document.getElementById('summaryPainLevel');
+            const summaryWellnessGoal = document.getElementById('summaryWellnessGoal');
+            const summarySessions = document.getElementById('summarySessions');
+
+            if (summaryName) {
+                summaryName.textContent = data.fullName || 'Not provided';
+            }
+
+            if (summaryEmail) {
+                summaryEmail.textContent = data.email || 'Not provided';
+            }
+
+            if (summaryPhone) {
+                summaryPhone.textContent = data.phone || 'Not provided';
+            }
+
+            const painLevel = data.painLevel || 'Not provided';
+            const painDisplay =
+                painLevel !== 'Not provided'
+                    ? `${painLevel}/10 ${getPainLevelEmoji(painLevel)}`
+                    : 'Not provided';
+
+            if (summaryPainLevel) {
+                summaryPainLevel.textContent = painDisplay;
+            }
+
+            const goalsList = data.wellnessGoal
+                ? data.wellnessGoal
+                    .split(', ')
+                    .map(g => g.charAt(0).toUpperCase() + g.slice(1))
+                    .join(', ')
+                : 'Not provided';
+
+            if (summaryWellnessGoal) {
+                summaryWellnessGoal.textContent = goalsList;
+            }
+
+            const sessionMap = {
+                'quick-check': 'Quick Pain Check (15 minutes)',
+                'movement-relief': 'Movement & Relief Session (30 minutes)',
+                'full-assessment': 'Full Wellness Assessment (60 minutes)'
+            };
+
+            const sessionDisplay =
+                sessionMap[data.consultationPreference] ||
+                data.consultationPreference ||
+                'Not provided';
+
+            if (summarySessions) {
+                summarySessions.textContent = sessionDisplay;
+            }
+
+            initializeCalendly();
+        }
+
+        function getPainLevelEmoji(painLevel) {
+            const level = parseInt(painLevel, 10);
+            if (level === 0) return '😊';
+            if (level <= 2) return '🙂';
+            if (level <= 4) return '😐';
+            if (level <= 6) return '😟';
+            if (level <= 8) return '😣';
+            return '😫';
+        }
+
+        function initializeCalendly() {
+            const CALENDLY_URL = 'https://calendly.com/goode-naturalleegoode/ortho-pain-assessment-call';
+
+            const container = document.getElementById('calendlyContainer');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            const calDiv = document.createElement('div');
+            calDiv.className = 'calendly-inline-widget';
+            calDiv.setAttribute('data-url', CALENDLY_URL);
+            container.appendChild(calDiv);
+
+            if (!window.Calendly) {
+                const script = document.createElement('script');
+                script.src = 'https://assets.calendly.com/assets/external/widget.js';
+                script.async = true;
+                script.onload = function () {
+                    // Widget auto-initializes from data-url
+                };
+                document.head.appendChild(script);
+            }
+        }
+
+        function handleFormReset(event) {
+            const confirmed = confirm('Are you sure you want to clear the form?');
+            if (!confirmed) {
+                event.preventDefault();
+            }
+        }
+
+        // ==============================================================================
+        // EVENT LISTENERS
+        // ==============================================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('intakeForm');
+
+            if (!form) {
+                console.error('Form not found');
+                return;
+            }
+
+            form.addEventListener('submit', handleFormSubmit);
+            form.addEventListener('reset', handleFormReset);
+
+            const fields = form.querySelectorAll('input, select, textarea');
+
+            fields.forEach(field => {
+                field.addEventListener('blur', () => {
+                    let value;
+
+                    if (field.type === 'checkbox' || field.type === 'radio') {
+                        const inputs = form.querySelectorAll(`[name="${field.name}"]`);
+                        const isChecked = Array.from(inputs).some(input => input.checked);
+                        value = isChecked ? 'selected' : '';
+                    } else {
+                        value = field.value.trim();
+                    }
+
+                    const validation = validateField(field.name, value);
+
+                    if (validation.valid) {
+                        clearFieldError(field.name);
+                    } else {
+                        showFieldError(field.name, validation.message);
+                    }
+                });
+            });
+
+            const painLevelSlider = document.getElementById('painLevel');
+            const painLevelValue = document.getElementById('painLevelValue');
+
+            if (painLevelSlider && painLevelValue) {
+                painLevelSlider.addEventListener('input', e => {
+                    painLevelValue.textContent = e.target.value;
+                });
+            }
+
+            const phoneField = document.getElementById('phone');
+            if (phoneField) {
+                phoneField.addEventListener('blur', e => {
+                    e.target.value = formatPhoneNumber(e.target.value);
+                });
+            }
+        });</script>
+    <script type="module">
+        import * as THREE from "three";
+        import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+        import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+        const scene = new THREE.Scene()
+
+        const viewerContainer = document.getElementById("viewer")
+
+        const getContainerWidth = () => Math.max(1, viewerContainer.clientWidth || viewerContainer.offsetWidth || 300)
+        const getContainerHeight = () => Math.max(1, viewerContainer.clientHeight || viewerContainer.offsetHeight || 500)
+
+        const camera = new THREE.PerspectiveCamera(75, getContainerWidth() / getContainerHeight(), 0.1, 1000)
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
+        renderer.setSize(getContainerWidth(), getContainerHeight())
+        renderer.domElement.style.display = "block"
+        renderer.domElement.style.width = "100%"
+        renderer.domElement.style.height = getContainerHeight() + "px"
+        renderer.shadowMap.enabled = true
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap
+        renderer.toneMapping = THREE.ACESFilmicToneMapping
+        renderer.toneMappingExposure = 1.1
+        renderer.outputColorSpace = THREE.SRGBColorSpace
+        viewerContainer.appendChild(renderer.domElement)
+
+        const resizeRenderer = () => {
+            const w = getContainerWidth()
+            const h = getContainerHeight()
+            renderer.setSize(w, h, false)
+            renderer.domElement.style.height = `${h}px`
+            camera.aspect = w / h
+            camera.updateProjectionMatrix()
+        }
+
+        if (typeof ResizeObserver !== 'undefined') {
+            new ResizeObserver(resizeRenderer).observe(viewerContainer)
+        }
+        window.addEventListener("resize", resizeRenderer)
+
+        const ambient = new THREE.AmbientLight(0xffe0cc, 0.35)
+        scene.add(ambient)
+        const keyLight = new THREE.DirectionalLight(0xfff0e0, 2.2)
+        keyLight.position.set(2, 4, 3)
+        keyLight.castShadow = true
+        keyLight.shadow.mapSize.width = 2048
+        keyLight.shadow.mapSize.height = 2048
+        keyLight.shadow.camera.near = 0.1
+        keyLight.shadow.camera.far = 20
+        keyLight.shadow.camera.left = -2
+        keyLight.shadow.camera.right = 2
+        keyLight.shadow.camera.top = 2
+        keyLight.shadow.camera.bottom = -2
+        keyLight.shadow.bias = -0.001
+        scene.add(keyLight)
+        const fillLight = new THREE.DirectionalLight(0xc0d8ff, 0.4)
+        fillLight.position.set(-3, 2, 1)
+        scene.add(fillLight)
+        const rimLight = new THREE.DirectionalLight(0xff9966, 0.6)
+        rimLight.position.set(0, 3, -4)
+        scene.add(rimLight)
+        const bounceLight = new THREE.DirectionalLight(0xff6633, 0.15)
+        bounceLight.position.set(0, -3, 2)
+        scene.add(bounceLight)
+
+        const controls = new OrbitControls(camera, renderer.domElement)
+        controls.target.set(0, 0.85, 0)
+        controls.enableDamping = true
+        controls.dampingFactor = 0.05
+
+        controls.addEventListener('start', () => {
+            if (animating) {
+                animating = false
+            }
+        })
+
+        renderer.domElement.addEventListener('wheel', () => {
+            if (animating) {
+                animating = false
+            }
+        }, { passive: true })
+
+        const raycaster = new THREE.Raycaster()
+        const pointer = new THREE.Vector2()
+        const bodyMeshes = []
+        const meshVolume = new Map()
+        const meshMatName = new Map()
+        const meshLabelIndex = new Map()
+
+        const searchInput = document.getElementById("searchInput")
+        const searchResults = document.getElementById("searchResults")
+
+        const SPINE_X = 0
+        const SPINE_Z = 0
+
+        const DIAGNOSES = {
+            head: ["Tension headaches", "Migraine headaches", "Concussion", "Temporomandibular joint disorder (TMJ)"],
+            neck: ["Cervical strain or sprain", "Cervical radiculopathy", "Cervical spondylosis", "Herniated cervical disc"],
+            shoulder: ["Rotator cuff tear or tendinitis", "Shoulder impingement syndrome", "Frozen shoulder (adhesive capsulitis)", "Shoulder bursitis"],
+            elbow: ["Tennis elbow (lateral epicondylitis)", "Golfer's elbow (medial epicondylitis)", "Olecranon bursitis", "Ulnar nerve entrapment"],
+            forearm: [],
+            wrist: ["Carpal tunnel syndrome", "Wrist sprain", "De Quervain's tenosynovitis", "Ganglion cyst"],
+            hand: ["Trigger finger", "Arthritis in the hand", "Tendon injuries", "Dupuytren's contracture"],
+            chest: ["Costochondritis", "Pectoralis strain", "Intercostal muscle strain", "Sternoclavicular joint sprain"],
+            abdomen: [],
+            back: ["Strain", "Herniated disc", "Sciatica", "Degenerative disc disease", "Spinal stenosis"],
+            hip: ["Hip bursitis", "Hip arthritis", "Hip impingement", "Labral tear"],
+            thigh: ["Hamstring strain", "Quadriceps strain", "IT band syndrome", "Femoral stress fracture"],
+            knee: ["ACL tear", "Meniscus tear", "Patellar tendonitis", "Knee arthritis", "Patellofemoral pain syndrome"],
+            calf: ["Calf strain", "Deep vein thrombosis", "Compartment syndrome", "Shin splints"],
+            lowerleg: [],
+            ankle: ["Ankle sprain", "Achilles tendonitis", "Ankle instability", "Stress fracture"],
+            foot: ["Plantar fasciitis", "Tarsal tunnel syndrome", "Bunions", "Morton's neuroma"],
+            upperarm: ["Biceps tendon rupture", "Triceps strain", "Humerus fracture", "Referred shoulder pain"],
+        }
+
+        const ARM_X_THRESHOLD = 0.14
+
+        function getBodyArea(center) {
+            const { x, y, z } = center
+            const absX = Math.abs(x)
+            const isArm = absX > ARM_X_THRESHOLD
+            const isHandWidth = absX > 0.26
+            const isLateralHip = absX > 0.11
+
+            if (y > 1.55) return "head"
+            if (y > 1.42) return isArm ? "shoulder" : "neck"
+            if (y > 1.25) return isArm ? "shoulder" : (z > 0 ? "chest" : "back")
+            if (y > 1.10) return isArm ? "upperarm" : (z > 0 ? "chest" : "back")
+            if (y > 1.06) return isArm ? "elbow" : (z > 0 ? "abdomen" : "back")
+            if (y > 0.84) return isArm ? (isHandWidth ? "wrist" : "forearm") : (!isLateralHip && z > 0.02 ? "abdomen" : "hip")
+            if (y > 0.70) return isArm ? (isHandWidth ? "hand" : "wrist") : (!isLateralHip && z > 0.02 ? "abdomen" : "hip")
+            if (y > 0.62) return isArm ? "hand" : "hip"
+            if (y > 0.50) return "thigh"
+            if (y > 0.40) return "knee"
+            if (y > 0.18) return z > -0.03 ? "lowerleg" : "calf"
+            if (y > 0.08) return "ankle"
+            return "foot"
+        }
+
+        const MATERIAL_COLORS = {
+            "Fascia": { color: 0xcc3322, roughness: 0.65, metalness: 0.05 },
+            "Superficial": { color: 0xbb2d1e, roughness: 0.70, metalness: 0.03 },
+            "Internal rotator": { color: 0xc0392b, roughness: 0.60, metalness: 0.05 },
+            "External rotation": { color: 0xbe3024, roughness: 0.60, metalness: 0.05 },
+            "Flexion": { color: 0xb83225, roughness: 0.62, metalness: 0.05 },
+            "Extension": { color: 0xc13428, roughness: 0.62, metalness: 0.05 },
+            "Biarticular": { color: 0xba2f22, roughness: 0.63, metalness: 0.05 },
+            "Abductor": { color: 0xc43d30, roughness: 0.60, metalness: 0.05 },
+            "Adductor": { color: 0xbf3528, roughness: 0.60, metalness: 0.05 },
+            "Trapezius": { color: 0xc83e30, roughness: 0.58, metalness: 0.06 },
+            "Diaphragm": { color: 0xd04535, roughness: 0.55, metalness: 0.06 },
+            "Masticator": { color: 0xb52e22, roughness: 0.65, metalness: 0.04 },
+            "Depressor": { color: 0xb83020, roughness: 0.65, metalness: 0.04 },
+            "Levator": { color: 0xba3122, roughness: 0.65, metalness: 0.04 },
+            "Phonation": { color: 0xc03828, roughness: 0.62, metalness: 0.04 },
+            "Ingestion": { color: 0xbc3425, roughness: 0.64, metalness: 0.04 },
+            "Orbicularis/Constrictor": { color: 0xb52e20, roughness: 0.66, metalness: 0.04 },
+            "Extension hand/foot": { color: 0xbf3626, roughness: 0.62, metalness: 0.05 },
+            "Flexion hand/foot": { color: 0xba3124, roughness: 0.62, metalness: 0.05 },
+            "Flexion fingers": { color: 0xb83022, roughness: 0.63, metalness: 0.05 },
+            "Extensor extremities": { color: 0xc03827, roughness: 0.61, metalness: 0.05 },
+            "Ligament": { color: 0xe8c4a0, roughness: 0.75, metalness: 0.02 },
+            "Tendon": { color: 0xf0d4b0, roughness: 0.72, metalness: 0.02 },
+            "Cartilage": { color: 0xe8e0d0, roughness: 0.55, metalness: 0.08 },
+            "Articular capsule": { color: 0xd4b896, roughness: 0.70, metalness: 0.02 },
+            "Bursa": { color: 0xc8d8e8, roughness: 0.40, metalness: 0.10, opacity: 0.75 },
+        }
+        const DEFAULT_MUSCLE = { color: 0xc03828, roughness: 0.62, metalness: 0.05 }
+
+        const loader = new GLTFLoader()
+        loader.load(
+            "assets/human-body2.glb",
+            (gltf) => {
+                scene.add(gltf.scene)
+                gltf.scene.traverse((child) => {
+                    if (!child.isMesh) return
+                    child.castShadow = true
+                    child.receiveShadow = true
+                    const mat = child.material
+                    const matName = Array.isArray(mat) ? mat[0]?.name : mat?.name
+                    if (matName === "Text") {
+                        const t = (m) => { m.transparent = true; m.opacity = 0; m.depthWrite = false; m.needsUpdate = true }
+                        Array.isArray(mat) ? mat.forEach(t) : t(mat)
+                        child.castShadow = false
+                        child.receiveShadow = false
+                        return
+                    }
+                    meshMatName.set(child.uuid, matName)
+                    const preset = MATERIAL_COLORS[matName] || DEFAULT_MUSCLE
+                    child.material = new THREE.MeshPhysicalMaterial({
+                        color: preset.color, roughness: preset.roughness, metalness: preset.metalness,
+                        transparent: preset.opacity !== undefined, opacity: preset.opacity ?? 1.0,
+                        depthWrite: preset.opacity === undefined,
+                        sheen: 0.15, sheenColor: new THREE.Color(0xff8866), sheenRoughness: 0.8, envMapIntensity: 0.3,
+                    })
+                    bodyMeshes.push(child)
+                    child.geometry.computeBoundingBox()
+                    const box = child.geometry.boundingBox
+                    const size = new THREE.Vector3()
+                    box.getSize(size)
+                    meshVolume.set(child.uuid, size.x * size.y * size.z)
+
+                    const label = cleanMeshName(child.name)
+                    const key = label.toLowerCase()
+                    if (!meshLabelIndex.has(key)) {
+                        meshLabelIndex.set(key, [])
+                    }
+                    meshLabelIndex.get(key).push(child)
+                })
+
+                // Hide loading overlay
+                const overlay = document.getElementById("loadingOverlay")
+                overlay.style.transition = "opacity 0.4s ease"
+                overlay.style.opacity = "0"
+                setTimeout(() => overlay.style.display = "none", 400)
+            },
+            (xhr) => {
+                if (xhr.lengthComputable) {
+                    const pct = Math.round((xhr.loaded / xhr.total) * 100)
+                    document.getElementById("loadingBarFill").style.width = pct + "%"
+                    document.getElementById("loadingPercent").textContent = pct + "%"
+                }
+            },
+            (error) => {
+                console.error("GLB load error:", error)
+                document.getElementById("loadingLabel").textContent = "Failed to load model"
+            }
+        )
+
+        const highlightMat = new THREE.MeshPhysicalMaterial({
+            color: 0xff9900, emissive: 0xff6600, emissiveIntensity: 0.4,
+            roughness: 0.4, metalness: 0.1, depthTest: false, depthWrite: false, transparent: true, opacity: 0.95
+        })
+
+        let selectedMesh = null, originalMat = null, originalRenderOrder = 0
+
+        const ZOOM_IN_DURATION = 90
+        const ZOOM_OUT_DURATION = 60
+        const CLICK_MAX_MOVE = 8
+        const CLICK_MAX_DURATION = 250
+
+        let animating = false
+        let animFrom = { pos: new THREE.Vector3(), target: new THREE.Vector3() }
+        let animTo = { pos: new THREE.Vector3(), target: new THREE.Vector3() }
+        let animT = 0
+        let animDuration = ZOOM_IN_DURATION
+        let pointerDownPoint = null
+        let pointerDownTime = 0
+        let pointerMoved = false
+
+        const DEFAULT_DIST = 2
+        const defaultCamPos = new THREE.Vector3(0, 0.85, DEFAULT_DIST)
+        const defaultTarget = new THREE.Vector3(0, 0.85, 0)
+        let lastHorizDir = new THREE.Vector3(0, 0, 1)
+
+        function startCameraAnim(toPos, toTarget, duration) {
+            animFrom.pos.copy(camera.position)
+            animFrom.target.copy(controls.target)
+            animTo.pos.copy(toPos)
+            animTo.target.copy(toTarget)
+            animT = 0
+            animDuration = duration
+            animating = true
+        }
+
+        function getCameraPositionForMesh(mesh) {
+            const box = new THREE.Box3().setFromObject(mesh)
+            const meshCenter = new THREE.Vector3()
+            box.getCenter(meshCenter)
+            const meshSize = new THREE.Vector3()
+            box.getSize(meshSize)
+            const maxDim = Math.max(meshSize.x, meshSize.y, meshSize.z)
+            const horizDir = new THREE.Vector3(meshCenter.x - SPINE_X, 0, meshCenter.z - SPINE_Z)
+            if (horizDir.length() < 0.001) horizDir.set(0, 0, 1)
+            else horizDir.normalize()
+            const zoomDist = Math.max(maxDim * 3, 0.08)
+            const camPos = new THREE.Vector3(
+                meshCenter.x + horizDir.x * zoomDist, meshCenter.y, meshCenter.z + horizDir.z * zoomDist
+            )
+            return { camPos, meshCenter, horizDir }
+        }
+
+        function getZoomOutPosition(horizDir) {
+            return {
+                camPos: new THREE.Vector3(SPINE_X + horizDir.x * DEFAULT_DIST, defaultCamPos.y, SPINE_Z + horizDir.z * DEFAULT_DIST),
+                target: new THREE.Vector3(SPINE_X, defaultTarget.y, SPINE_Z)
+            }
+        }
+
+        function cleanMeshName(raw) {
+            return raw
+                .replace(/_+\d+$/, "")
+                .replace(/([a-z])l$/i, "$1")
+                .replace(/_/g, " ")
+                .replace(/\bmusclel\b/gi, "muscle")
+                .replace(/\bmuscler\b/gi, "muscle")
+                .replace(/\bmusclek\b/gi, "muscle")
+                .replace(/\bwristl\b/gi, "wrist")
+                .replace(/\bwristr\b/gi, "wrist")
+                .replace(/\bhandl\b/gi, "hand")
+                .replace(/\bhandr\b/gi, "hand")
+                .replace(/\bbursall?\b/gi, "bursal")
+                .replace(/\bbursalr\b/gi, "bursal")
+                .replace(/\bligamentl\b/gi, "ligament")
+                .replace(/\bligamentr\b/gi, "ligament")
+                .replace(/\btendonl\b/gi, "tendon")
+                .replace(/\btendonr\b/gi, "tendon")
+                .replace(/\bfascial\b/gi, "fascia")
+                .replace(/\bfasciar\b/gi, "fascia")
+                .replace(/\bnervel\b/gi, "nerve")
+                .replace(/\bnervesr\b/gi, "nerves")
+                .replace(/\bveinl\b/gi, "vein")
+                .replace(/\bveinr\b/gi, "vein")
+                .replace(/\barteryl\b/gi, "artery")
+                .replace(/\arteryр\b/gi, "artery")
+                .replace(/\bSupinatorl\b/gi, "Supinator")
+                .replace(/\bSupinatorr\b/gi, "Supinator")
+                .replace(/\b\w/g, c => c.toUpperCase())
+                .replace(/\s+/g, " ")
+                .trim()
+        }
+
+        function getSearchMatches(query) {
+            const normalized = query.trim().toLowerCase()
+            if (!normalized) return []
+            return [...meshLabelIndex.keys()]
+                .filter(label => label.includes(normalized))
+                .sort((a, b) => a.localeCompare(b))
+                .slice(0, 10)
+        }
+
+        function clearSearchResults() {
+            if (!searchResults) return
+            searchResults.innerHTML = ''
+            searchResults.classList.remove('visible')
+        }
+
+        function renderSearchResults(query) {
+            if (!searchResults) return
+            const matches = getSearchMatches(query)
+            searchResults.innerHTML = ''
+            if (!matches.length) {
+                searchResults.innerHTML = '<li class="search-empty">No matches found</li>'
+                searchResults.classList.add('visible')
+                return
+            }
+
+            matches.forEach(label => {
+                const item = document.createElement('li')
+                item.className = 'search-result-item'
+                item.textContent = label
+                item.addEventListener('click', () => {
+                    const meshes = meshLabelIndex.get(label.toLowerCase())
+                    if (meshes && meshes.length) {
+                        selectBodyMesh(meshes[0])
+                        if (searchInput) searchInput.value = label
+                        clearSearchResults()
+                    }
+                })
+                searchResults.appendChild(item)
+            })
+            searchResults.classList.add('visible')
+        }
+
+        function restoreSelectedMesh() {
+            if (!selectedMesh || !originalMat) return
+            selectedMesh.material = originalMat
+            selectedMesh.renderOrder = originalRenderOrder
+            selectedMesh = null
+            originalMat = null
+        }
+
+        function clearSelection() {
+            if (!selectedMesh) return
+            restoreSelectedMesh()
+            const { camPos, target } = getZoomOutPosition(lastHorizDir)
+            startCameraAnim(camPos, target, ZOOM_OUT_DURATION)
+            document.getElementById("partTitle").textContent = "Select a body part"
+            document.getElementById("partDescription").textContent = ""
+            updateSelectedBodyInput('')
+        }
+
+        function getSelectableHit(hits) {
+            return hits.find(hit => {
+                const name = meshMatName.get(hit.object.uuid) ?? ""
+                return name !== "Fascia"
+            })?.object
+        }
+
+        function selectBodyMesh(mesh) {
+            if (!mesh) return
+            if (selectedMesh && selectedMesh.uuid === mesh.uuid) {
+                clearSelection()
+                return
+            }
+
+            restoreSelectedMesh()
+            const matName = meshMatName.get(mesh.uuid) ?? 'Unknown'
+
+            originalMat = mesh.material
+            originalRenderOrder = mesh.renderOrder
+            selectedMesh = mesh
+            mesh.material = highlightMat
+            mesh.renderOrder = 999
+
+            const { camPos, meshCenter, horizDir } = getCameraPositionForMesh(mesh)
+            lastHorizDir.copy(horizDir)
+            startCameraAnim(camPos, meshCenter, ZOOM_IN_DURATION)
+            updateInfoPanel(mesh, matName)
+        }
+
+        function selectSearchResult(query) {
+            const matches = getSearchMatches(query)
+            if (!matches.length) return
+            const meshes = meshLabelIndex.get(matches[0])
+            if (meshes && meshes.length) {
+                selectBodyMesh(meshes[0])
+                if (searchInput) searchInput.value = matches[0]
+                clearSearchResults()
+            }
+        }
+
+        function updateSearchResultsFromInput() {
+            if (!searchInput) return
+            const value = searchInput.value.trim()
+            if (!value) {
+                clearSearchResults()
+                return
+            }
+            renderSearchResults(value)
+        }
+
+        function updateSelectedBodyInput(area) {
+            const selectedBodyArea = document.getElementById('selectedBodyArea')
+            if (selectedBodyArea) {
+                selectedBodyArea.value = area || ''
+            }
+        }
+
+        function updateInfoPanel(mesh, matName) {
+            const box = new THREE.Box3().setFromObject(mesh)
+            const center = new THREE.Vector3()
+            box.getCenter(center)
+
+            const area = getBodyArea(center)
+            const diagnoses = DIAGNOSES[area]
+            const areaLabel = area ? area.charAt(0).toUpperCase() + area.slice(1) : null
+
+            console.log("Selected mesh:", mesh.name)
+            console.log("Material:", matName)
+            console.log("Area:", area, `| y:${center.y.toFixed(3)} x:${center.x.toFixed(3)} z:${center.z.toFixed(3)}`)
+
+            const displayName = cleanMeshName(mesh.name)
+            document.getElementById("partTitle").textContent = displayName
+
+            const descEl = document.getElementById("partDescription")
+            if (diagnoses && areaLabel) {
+                descEl.innerHTML = `<strong>Common ${areaLabel} Diagnoses:</strong><br>` +
+                    diagnoses.map(d => `• ${d}`).join("<br>")
+            } else {
+                descEl.textContent = ""
+            }
+
+            updateSelectedBodyInput(area)
+            document.dispatchEvent(new CustomEvent('bodyAreaSelected', { detail: { area, label: areaLabel, meshName: cleanMeshName(mesh.name) } }))
+        }
+
+        function handleViewerClick(e) {
+            const rect = renderer.domElement.getBoundingClientRect()
+            pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
+            pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
+            raycaster.setFromCamera(pointer, camera)
+            const hits = raycaster.intersectObjects(bodyMeshes, false)
+            const mesh = getSelectableHit(hits)
+
+            if (!mesh) {
+                clearSelection()
+                return
+            }
+
+            selectBodyMesh(mesh)
+        }
+
+        renderer.domElement.addEventListener('pointerdown', (e) => {
+            pointerDownTime = performance.now()
+            pointerDownPoint = { x: e.clientX, y: e.clientY }
+            pointerMoved = false
+        })
+
+        renderer.domElement.addEventListener('pointermove', (e) => {
+            if (!pointerDownPoint) return
+            const distance = Math.hypot(e.clientX - pointerDownPoint.x, e.clientY - pointerDownPoint.y)
+
+            if (distance > CLICK_MAX_MOVE) {
+                pointerMoved = true
+            }
+
+            if (pointerMoved && animating) {
+                animating = false
+            }
+        })
+
+        renderer.domElement.addEventListener('pointerup', (e) => {
+            if (!pointerDownPoint) return
+            const duration = performance.now() - pointerDownTime
+            const distance = Math.hypot(e.clientX - pointerDownPoint.x, e.clientY - pointerDownPoint.y)
+            pointerDownPoint = null
+
+            if (!pointerMoved && duration <= CLICK_MAX_DURATION && distance <= CLICK_MAX_MOVE) {
+                handleViewerClick(e)
+            }
+        })
+
+        renderer.domElement.addEventListener('pointercancel', () => {
+            pointerDownPoint = null
+        })
+
+        camera.position.copy(defaultCamPos)
+
+        if (searchInput) {
+            searchInput.addEventListener('input', updateSearchResultsFromInput)
+            searchInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault()
+                    selectSearchResult(searchInput.value)
+                }
+            })
+        }
+
+        document.addEventListener('click', (event) => {
+            if (!searchResults || !searchInput) return
+            if (event.target === searchInput || searchResults.contains(event.target)) return
+            clearSearchResults()
+        })
+
+        function animate() {
+            requestAnimationFrame(animate)
+            if (animating) {
+                animT++
+                const t = Math.min(animT / animDuration, 1)
+                const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+                camera.position.lerpVectors(animFrom.pos, animTo.pos, ease)
+                controls.target.lerpVectors(animFrom.target, animTo.target, ease)
+                if (t >= 1) animating = false
+            }
+            controls.update()
+            renderer.render(scene, camera)
+        }
+
+        animate()
+    </script>
 </body>
+
 </html>
