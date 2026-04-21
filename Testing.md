@@ -24,3 +24,6 @@
 10. **UpperBody/LowerBody Scan(Live Joint Angle Capture)** - Verify as the user moves their arms, the symmetry difference values in the info box update in real time quickly and accurately.
 11. **UpperBody/LowerBody Scan(Repetition Counter)** - Verify when a user raises both arms overhead and then lowers them back down past the starting position, the rep counter increments. 
 ## Test Scripts 
+
+```javascript
+```
