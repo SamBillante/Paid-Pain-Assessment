@@ -24,34 +24,41 @@
 10. **UpperBody/LowerBody Scan(Live Joint Angle Capture)** - Verify as the user moves their arms, the symmetry difference values in the info box update in real time quickly and accurately.
 11. **UpperBody/LowerBody Scan(Repetition Counter)** - Verify when a user raises both arms overhead and then lowers them back down past the starting position, the rep counter increments. 
 ## Test Scripts 
-**Required Field Validation(Missing Name)**
+**Use These Helpers To Test**
 ```javascript
 const { Builder, By, until } = require('selenium-webdriver');
-async function test_one_RequiredFieldValidation_EmptyForm() {
+async function startTest(page = 'index.html') {
     let driver = await new Builder().forBrowser('chrome').build();
+    await driver.get(`file:///path/to/Paid-Pain-Assessment/${page}`);
+    return driver;
+}
+async function endTest(driver, testName) {
+    await driver.quit();
+    console.log(`${testName} PASSED`);
+}
+function check(condition, message) {
+    console.assert(condition, `FAIL: ${message}`);
+}
+```
+**Required Field Validation(Missing Name)**
+```javascript
+async function test_Test1() {
+    let driver = await startTest();
     try {
-        await driver.get('file:///path/to/Paid-Pain-Assessment/index.html');
+        await driver.findElement(By.css("button[type='submit']")).click();
 
-        // Submits without filling anything in
-        let submitBtn = await driver.findElement(By.css("button[type='submit']"));
-        await submitBtn.click();
-
-        // Confirmation screen should NOT be visible
         let confirmationScreen = await driver.findElement(By.id('thankYouMessage'));
-        let isDisplayed = await confirmationScreen.isDisplayed();
-        console.assert(!isDisplayed, 'FAIL: Confirmation screen appeared on empty form submission');
+        check(!await confirmationScreen.isDisplayed(), 'Confirmation screen should not appear on empty submission');
 
-        // Name field should be invalid
         let nameField = await driver.findElement(By.id('fullName'));
         let isValid = await driver.executeScript('return arguments[0].validity.valid;', nameField);
-        console.assert(!isValid, 'FAIL: Name field should be invalid when empty');
+        check(!isValid, 'Name field should be invalid when empty');
 
-        console.log('Test1 PASSED');
+        await endTest(driver, 'Test1');
     } catch (e) {
         console.error('Test1 FAILED:', e.message);
-    } finally {
         await driver.quit();
     }
 }
-test_one_RequiredFieldValidation_EmptyForm();
+test1();
 ```
