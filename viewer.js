@@ -169,7 +169,7 @@ const DEFAULT_MUSCLE = { color: 0xc03828, roughness: 0.62, metalness: 0.05 }
 
 const loader = new GLTFLoader()
 loader.load(
-  "assets/human-body2.glb",
+  "https://SamBillante.github.io/Paid-Pain-Assessment/assets/human-body2.glb", // If running locally, change this link to the path of the GLB file on your machine, e.g. "models/human-body2.glb"
   (gltf) => {
     scene.add(gltf.scene)
     gltf.scene.traverse((child) => {
