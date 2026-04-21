@@ -42,7 +42,7 @@ function check(condition, message) {
 ```
 **Required Field Validation(Missing Name)**
 ```javascript
-async function test_Test1() {
+async function test1() {
     let driver = await startTest();
     try {
         await driver.findElement(By.css("button[type='submit']")).click();
@@ -54,11 +54,37 @@ async function test_Test1() {
         let isValid = await driver.executeScript('return arguments[0].validity.valid;', nameField);
         check(!isValid, 'Name field should be invalid when empty');
 
-        await endTest(driver, 'Test1');
+        await endTest(driver, 'test1');
     } catch (e) {
-        console.error('Test1 FAILED:', e.message);
+        console.error('test1 FAILED:', e.message);
         await driver.quit();
     }
 }
 test1();
+```
+**Required Field Validation(Checkbox)**
+```javascript
+async function test2() {
+    let driver = await startTest();
+    try {
+        await driver.findElement(By.id('fullName')).sendKeys('Test User');
+        await driver.findElement(By.id('email')).sendKeys('test@example.com');
+        await driver.findElement(By.id('phone')).sendKeys('5555555555');
+        await driver.findElement(By.css("input[name='painDuration'][value='today']")).click();
+        await driver.findElement(By.css("input[name='wellnessGoal'][value='reducing-pain']")).click();
+        await driver.findElement(By.css("input[name='consultationPreference'][value='quick-check']")).click();
+
+        // Submit without checking the disclaimer
+        await driver.findElement(By.css("button[type='submit']")).click();
+
+        let confirmationScreen = await driver.findElement(By.id('thankYouMessage'));
+        check(!await confirmationScreen.isDisplayed(), 'Confirmation screen should not appear without disclaimer checked');
+
+        await endTest(driver, 'test2');
+    } catch (e) {
+        console.error('test2 FAILED:', e.message);
+        await driver.quit();
+    }
+}
+test2();
 ```
