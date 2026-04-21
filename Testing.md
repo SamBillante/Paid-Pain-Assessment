@@ -184,28 +184,6 @@ test5();
 ```
 **EmailJS Form Submission(Success)**
 ```javascript
-Here's test6 — Successful Form Submission Shows Confirmation Screen:
-javascriptconst { Builder, By, until } = require('selenium-webdriver');
-
-// ── Shared helpers ──────────────────────────────────────────
-async function startTest(page = 'index.html') {
-    let driver = await new Builder().forBrowser('chrome').build();
-    await driver.get(`file:///path/to/Paid-Pain-Assessment/${page}`);
-    return driver;
-}
-
-async function endTest(driver, testName) {
-    await driver.quit();
-    console.log(`${testName} PASSED`);
-}
-
-function check(condition, message) {
-    console.assert(condition, `FAIL: ${message}`);
-}
-// ────────────────────────────────────────────────────────────
-
-
-// test6: Successful Form Submission Shows Confirmation Screen
 async function test6() {
     let driver = await startTest();
     try {
