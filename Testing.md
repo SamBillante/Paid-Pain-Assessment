@@ -27,7 +27,7 @@
 **Required Field Validation(Missing Name)**
 ```javascript
 const { Builder, By, until } = require('selenium-webdriver');
-async function test_TS01_RequiredFieldValidation_EmptyForm() {
+async function test_one_RequiredFieldValidation_EmptyForm() {
     let driver = await new Builder().forBrowser('chrome').build();
     try {
         await driver.get('file:///path/to/Paid-Pain-Assessment/index.html');
@@ -46,12 +46,12 @@ async function test_TS01_RequiredFieldValidation_EmptyForm() {
         let isValid = await driver.executeScript('return arguments[0].validity.valid;', nameField);
         console.assert(!isValid, 'FAIL: Name field should be invalid when empty');
 
-        console.log('TS-01 PASSED');
+        console.log('Test1 PASSED');
     } catch (e) {
-        console.error('TS-01 FAILED:', e.message);
+        console.error('Test1 FAILED:', e.message);
     } finally {
         await driver.quit();
     }
 }
-test_TS01_RequiredFieldValidation_EmptyForm();
+test_one_RequiredFieldValidation_EmptyForm();
 ```
