@@ -363,13 +363,5 @@
 
     <script src="script.js"></script>
     <script type="module" src="viewer.js"></script>
-
-    <script>
-        // Sync viewer selection to hidden form field
-        document.addEventListener('bodyAreaSelected', (e) => {
-            const field = document.getElementById('selectedBodyArea')
-            if (field) field.value = e.detail.area
-        })
-    </script>
 </body>
 </html>

@@ -1,126 +1,3 @@
-// This code doesn't sort raycast hits by box size, so larger meshes override smaller ones
-// Useful for simpler modeling 
-
-// import * as THREE from "three";
-// import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-// import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-
-// const scene = new THREE.Scene()
-// const camera = new THREE.PerspectiveCamera(75, window.innerWidth / 600, 0.1, 1000)
-// const renderer = new THREE.WebGLRenderer({antialias:true})
-// renderer.setSize(window.innerWidth,600)
-// document.getElementById("viewer").appendChild(renderer.domElement)
-
-// const ambient = new THREE.AmbientLight(0xffffff,0.6)
-// scene.add(ambient)
-// const light = new THREE.DirectionalLight(0xffffff,1)
-// light.position.set(5,5,5)
-// scene.add(light)
-
-// const controls = new OrbitControls(camera,renderer.domElement)
-// controls.target.set(0, 0.85, 0)
-
-// const raycaster = new THREE.Raycaster()
-// const pointer = new THREE.Vector2()
-
-// // Track all body meshes for raycasting
-// const bodyMeshes = []
-
-// const loader = new GLTFLoader()
-
-// loader.load("assets/human-body2.glb",(gltf)=>{
-
-//   scene.add(gltf.scene)
-
-//   gltf.scene.traverse((child)=>{
-//     if(child.isMesh){
-//       const mat = child.material
-//       const matName = Array.isArray(mat) ? mat[0]?.name : mat?.name
-
-//       if(matName === "Text"){
-//         const applyTransparent = (m) => {
-//           m.transparent = true
-//           m.opacity = 0
-//           m.depthWrite = false
-//           m.needsUpdate = true
-//         }
-//         Array.isArray(mat) ? mat.forEach(applyTransparent) : applyTransparent(mat)
-//       } else {
-//         // Only add non-text meshes to raycaster targets
-//         bodyMeshes.push(child)
-//       }
-
-//       // Fix any low-opacity meshes
-//       const checkMat = (m) => {
-//         if(m.opacity < 0.5 && matName !== "Text"){
-//           m.opacity = 1
-//           m.transparent = false
-//           m.needsUpdate = true
-//         }
-//       }
-//       Array.isArray(mat) ? mat.forEach(checkMat) : checkMat(mat)
-//     }
-//   })
-
-// })
-
-// // Highlight material for selected mesh
-// const highlightMat = new THREE.MeshStandardMaterial({
-//   color: 0xff6600,
-//   emissive: 0xff3300,
-//   emissiveIntensity: 0.3
-// })
-
-// let selectedMesh = null
-// let originalMat = null
-
-// renderer.domElement.addEventListener("click", (e) => {
-
-//   // Convert click to normalized device coordinates
-//   const rect = renderer.domElement.getBoundingClientRect()
-//   pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
-//   pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
-
-//   raycaster.setFromCamera(pointer, camera)
-//   const hits = raycaster.intersectObjects(bodyMeshes, false)
-
-//   // Restore previous selection
-//   if(selectedMesh && originalMat){
-//     selectedMesh.material = originalMat
-//     selectedMesh = null
-//     originalMat = null
-//   }
-
-//   if(hits.length > 0){
-//     const mesh = hits[0].object
-//     const mat = mesh.material
-//     const matName = Array.isArray(mat) ? mat[0]?.name : mat?.name
-
-//     console.log("Selected mesh:", mesh.name)
-//     console.log("Material:", matName)
-
-//     // Highlight selected mesh
-//     originalMat = mesh.material
-//     selectedMesh = mesh
-//     mesh.material = highlightMat
-
-//     // Update info panel
-//     document.getElementById("partTitle").textContent = mesh.name.replace(/_/g, " ")
-//     document.getElementById("partDescription").textContent = `Material: ${matName}`
-//   }
-
-// })
-
-// camera.position.set(0, 0.85, 2)
-
-// function animate(){
-//   requestAnimationFrame(animate)
-//   controls.update()
-//   renderer.render(scene,camera)
-// }
-
-// animate()
-
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -128,17 +5,17 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 const scene = new THREE.Scene()
 
 const viewerContainer = document.getElementById("viewer")
-const VIEWER_HEIGHT = 500
 
 const getContainerWidth = () => Math.max(1, viewerContainer.clientWidth || viewerContainer.offsetWidth || 300)
+const getContainerHeight = () => Math.max(1, viewerContainer.clientHeight || viewerContainer.offsetHeight || 500)
 
-const camera = new THREE.PerspectiveCamera(75, getContainerWidth() / VIEWER_HEIGHT, 0.1, 1000)
+const camera = new THREE.PerspectiveCamera(75, getContainerWidth() / getContainerHeight(), 0.1, 1000)
 const renderer = new THREE.WebGLRenderer({antialias: true, alpha: true})
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
-renderer.setSize(getContainerWidth(), VIEWER_HEIGHT)
+renderer.setSize(getContainerWidth(), getContainerHeight())
 renderer.domElement.style.display = "block"
 renderer.domElement.style.width = "100%"
-renderer.domElement.style.height = VIEWER_HEIGHT + "px"
+renderer.domElement.style.height = getContainerHeight() + "px"
 renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.toneMapping = THREE.ACESFilmicToneMapping
@@ -148,8 +25,10 @@ viewerContainer.appendChild(renderer.domElement)
 
 const resizeRenderer = () => {
   const w = getContainerWidth()
-  renderer.setSize(w, VIEWER_HEIGHT, false)
-  camera.aspect = w / VIEWER_HEIGHT
+  const h = getContainerHeight()
+  renderer.setSize(w, h, false)
+  renderer.domElement.style.height = `${h}px`
+  camera.aspect = w / h
   camera.updateProjectionMatrix()
 }
 
@@ -188,11 +67,27 @@ controls.target.set(0, 0.85, 0)
 controls.enableDamping = true
 controls.dampingFactor = 0.05
 
+controls.addEventListener('start', () => {
+  if (animating) {
+    animating = false
+  }
+})
+
+renderer.domElement.addEventListener('wheel', () => {
+  if (animating) {
+    animating = false
+  }
+}, { passive: true })
+
 const raycaster = new THREE.Raycaster()
 const pointer = new THREE.Vector2()
 const bodyMeshes = []
 const meshVolume = new Map()
 const meshMatName = new Map()
+const meshLabelIndex = new Map()
+
+const searchInput = document.getElementById("searchInput")
+const searchResults = document.getElementById("searchResults")
 
 const SPINE_X = 0
 const SPINE_Z = 0
@@ -304,6 +199,13 @@ loader.load(
       const size = new THREE.Vector3()
       box.getSize(size)
       meshVolume.set(child.uuid, size.x * size.y * size.z)
+
+      const label = cleanMeshName(child.name)
+      const key = label.toLowerCase()
+      if (!meshLabelIndex.has(key)) {
+        meshLabelIndex.set(key, [])
+      }
+      meshLabelIndex.get(key).push(child)
     })
 
     // Hide loading overlay
@@ -334,12 +236,17 @@ let selectedMesh = null, originalMat = null, originalRenderOrder = 0
 
 const ZOOM_IN_DURATION  = 90
 const ZOOM_OUT_DURATION = 60
+const CLICK_MAX_MOVE = 8
+const CLICK_MAX_DURATION = 250
 
 let animating = false
 let animFrom = { pos: new THREE.Vector3(), target: new THREE.Vector3() }
 let animTo   = { pos: new THREE.Vector3(), target: new THREE.Vector3() }
 let animT = 0
 let animDuration = ZOOM_IN_DURATION
+let pointerDownPoint = null
+let pointerDownTime = 0
+let pointerMoved = false
 
 const DEFAULT_DIST = 2
 const defaultCamPos = new THREE.Vector3(0, 0.85, DEFAULT_DIST)
@@ -405,12 +312,129 @@ function cleanMeshName(raw) {
     .replace(/\bveinl\b/gi, "vein")
     .replace(/\bveinr\b/gi, "vein")
     .replace(/\barteryl\b/gi, "artery")
-    .replace(/\barteryр\b/gi, "artery")
+    .replace(/\arteryр\b/gi, "artery")
     .replace(/\bSupinatorl\b/gi, "Supinator")
     .replace(/\bSupinatorr\b/gi, "Supinator")
     .replace(/\b\w/g, c => c.toUpperCase())
     .replace(/\s+/g, " ")
     .trim()
+}
+
+function getSearchMatches(query) {
+  const normalized = query.trim().toLowerCase()
+  if (!normalized) return []
+  return [...meshLabelIndex.keys()]
+    .filter(label => label.includes(normalized))
+    .sort((a, b) => a.localeCompare(b))
+    .slice(0, 10)
+}
+
+function clearSearchResults() {
+  if (!searchResults) return
+  searchResults.innerHTML = ''
+  searchResults.classList.remove('visible')
+}
+
+function renderSearchResults(query) {
+  if (!searchResults) return
+  const matches = getSearchMatches(query)
+  searchResults.innerHTML = ''
+  if (!matches.length) {
+    searchResults.innerHTML = '<li class="search-empty">No matches found</li>'
+    searchResults.classList.add('visible')
+    return
+  }
+
+  matches.forEach(label => {
+    const item = document.createElement('li')
+    item.className = 'search-result-item'
+    item.textContent = label
+    item.addEventListener('click', () => {
+      const meshes = meshLabelIndex.get(label.toLowerCase())
+      if (meshes && meshes.length) {
+        selectBodyMesh(meshes[0])
+        if (searchInput) searchInput.value = label
+        clearSearchResults()
+      }
+    })
+    searchResults.appendChild(item)
+  })
+  searchResults.classList.add('visible')
+}
+
+function restoreSelectedMesh() {
+  if (!selectedMesh || !originalMat) return
+  selectedMesh.material = originalMat
+  selectedMesh.renderOrder = originalRenderOrder
+  selectedMesh = null
+  originalMat = null
+}
+
+function clearSelection() {
+  if (!selectedMesh) return
+  restoreSelectedMesh()
+  const { camPos, target } = getZoomOutPosition(lastHorizDir)
+  startCameraAnim(camPos, target, ZOOM_OUT_DURATION)
+  document.getElementById("partTitle").textContent = "Select a body part"
+  document.getElementById("partDescription").textContent = ""
+  updateSelectedBodyInput('')
+}
+
+function getSelectableHit(hits) {
+  return hits.find(hit => {
+    const name = meshMatName.get(hit.object.uuid) ?? ""
+    return name !== "Fascia"
+  })?.object
+}
+
+function selectBodyMesh(mesh) {
+  if (!mesh) return
+  if (selectedMesh && selectedMesh.uuid === mesh.uuid) {
+    clearSelection()
+    return
+  }
+
+  restoreSelectedMesh()
+  const matName = meshMatName.get(mesh.uuid) ?? 'Unknown'
+
+  originalMat = mesh.material
+  originalRenderOrder = mesh.renderOrder
+  selectedMesh = mesh
+  mesh.material = highlightMat
+  mesh.renderOrder = 999
+
+  const { camPos, meshCenter, horizDir } = getCameraPositionForMesh(mesh)
+  lastHorizDir.copy(horizDir)
+  startCameraAnim(camPos, meshCenter, ZOOM_IN_DURATION)
+  updateInfoPanel(mesh, matName)
+}
+
+function selectSearchResult(query) {
+  const matches = getSearchMatches(query)
+  if (!matches.length) return
+  const meshes = meshLabelIndex.get(matches[0])
+  if (meshes && meshes.length) {
+    selectBodyMesh(meshes[0])
+    if (searchInput) searchInput.value = matches[0]
+    clearSearchResults()
+  }
+}
+
+function updateSearchResultsFromInput() {
+  if (!searchInput) return
+  const value = searchInput.value.trim()
+  if (!value) {
+    clearSearchResults()
+    return
+  }
+  renderSearchResults(value)
+}
+
+function updateSelectedBodyInput(area) {
+  const selectedBodyArea = document.getElementById('selectedBodyArea')
+  if (selectedBodyArea) {
+    selectedBodyArea.value = area || ''
+  }
 }
 
 function updateInfoPanel(mesh, matName) {
@@ -437,61 +461,76 @@ function updateInfoPanel(mesh, matName) {
     descEl.textContent = ""
   }
 
-  // Notify the intake form of the selected body area
+  updateSelectedBodyInput(area)
   document.dispatchEvent(new CustomEvent('bodyAreaSelected', { detail: { area, label: areaLabel, meshName: cleanMeshName(mesh.name) } }))
 }
 
-renderer.domElement.addEventListener("click", (e) => {
+function handleViewerClick(e) {
   const rect = renderer.domElement.getBoundingClientRect()
   pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
   pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
   raycaster.setFromCamera(pointer, camera)
   const hits = raycaster.intersectObjects(bodyMeshes, false)
+  const mesh = getSelectableHit(hits)
 
-  if(selectedMesh && originalMat){
-    selectedMesh.material = originalMat
-    selectedMesh.renderOrder = originalRenderOrder
-    selectedMesh = null; originalMat = null
-    const { camPos, target } = getZoomOutPosition(lastHorizDir)
-    startCameraAnim(camPos, target, ZOOM_OUT_DURATION)
-    document.getElementById("partTitle").textContent = "Select a body part"
-    document.getElementById("partDescription").textContent = ""
+  if (!mesh) {
+    clearSelection()
     return
   }
 
-  if(hits.length > 0){
-    hits.sort((a, b) => (meshVolume.get(a.object.uuid) ?? Infinity) - (meshVolume.get(b.object.uuid) ?? Infinity))
-    const mesh = hits[0].object
-    const matName = meshMatName.get(mesh.uuid) ?? "Unknown"
+  selectBodyMesh(mesh)
+}
 
-    originalMat = mesh.material
-    originalRenderOrder = mesh.renderOrder
-    selectedMesh = mesh
-    mesh.material = highlightMat
-    mesh.renderOrder = 999
+renderer.domElement.addEventListener('pointerdown', (e) => {
+  pointerDownTime = performance.now()
+  pointerDownPoint = { x: e.clientX, y: e.clientY }
+  pointerMoved = false
+})
 
-    const { camPos, meshCenter, horizDir } = getCameraPositionForMesh(mesh)
-    lastHorizDir.copy(horizDir)
-    startCameraAnim(camPos, meshCenter, ZOOM_IN_DURATION)
+renderer.domElement.addEventListener('pointermove', (e) => {
+  if (!pointerDownPoint) return
+  const distance = Math.hypot(e.clientX - pointerDownPoint.x, e.clientY - pointerDownPoint.y)
 
-    updateInfoPanel(mesh, matName)
+  if (distance > CLICK_MAX_MOVE) {
+    pointerMoved = true
   }
+
+  if (pointerMoved && animating) {
+    animating = false
+  }
+})
+
+renderer.domElement.addEventListener('pointerup', (e) => {
+  if (!pointerDownPoint) return
+  const duration = performance.now() - pointerDownTime
+  const distance = Math.hypot(e.clientX - pointerDownPoint.x, e.clientY - pointerDownPoint.y)
+  pointerDownPoint = null
+
+  if (!pointerMoved && duration <= CLICK_MAX_DURATION && distance <= CLICK_MAX_MOVE) {
+    handleViewerClick(e)
+  }
+})
+
+renderer.domElement.addEventListener('pointercancel', () => {
+  pointerDownPoint = null
 })
 
 camera.position.copy(defaultCamPos)
 
-// Purple mode — triggered by secret button chain
-document.addEventListener('purpleMode', () => {
-  bodyMeshes.forEach(mesh => {
-    const matName = meshMatName.get(mesh.uuid) ?? ""
-    const isRed = !["Ligament","Tendon","Cartilage","Articular capsule","Bursa"].includes(matName)
-    if(isRed && mesh.material.color) {
-      mesh.material.color.setHex(0x7b2d8b)
-      if(mesh.material.emissive) mesh.material.emissive.setHex(0x3d0052)
-      mesh.material.emissiveIntensity = 0.15
-      mesh.material.needsUpdate = true
+if (searchInput) {
+  searchInput.addEventListener('input', updateSearchResultsFromInput)
+  searchInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      selectSearchResult(searchInput.value)
     }
   })
+}
+
+document.addEventListener('click', (event) => {
+  if (!searchResults || !searchInput) return
+  if (event.target === searchInput || searchResults.contains(event.target)) return
+  clearSearchResults()
 })
 
 function animate(){
