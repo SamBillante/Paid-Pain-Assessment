@@ -9,8 +9,12 @@ show_deliverables_link: false
 
 # Sprint 3 Deliverables
 
-*   [Project Video](https://bama365-my.sharepoint.com/:v:/r/personal/sbillante_crimson_ua_edu/Documents/Screen%20Recording%202026-04-16%20225723.mp4?csf=1&web=1&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=K7uzaI){:target="_blank"}
-
+*   [Form in client site!](https://naturalleegoode.com/pain-assessment)
+*   [Project Video](https://bama365-my.sharepoint.com/:v:/g/personal/nobradley_crimson_ua_edu/IQD6cMve-T7HRpBTtatj70v2Aadi_j4B7trE6jhkj8vwQlk?e=clfcpL){:target="_blank"}
+*   [Sprint Presentation](https://bama365-my.sharepoint.com/:p:/g/personal/sbillante_crimson_ua_edu/IQA77Hdi8Iz8T4NjprQ2VhFTAUNNABh6-MgtR_vVst93qLg?e=rrjmyF){:target="_blank"}
+*   [Sprint Backlog](https://bama365-my.sharepoint.com/:w:/g/personal/sbillante_crimson_ua_edu/IQCzt6exXclETaMlLQVjrrU9AVcJlfAmB-bauYOMHkIo4B8?e=r1DMo6){:target="_blank"}
+*   [Project Backlog](https://bama365-my.sharepoint.com/:x:/g/personal/sbillante_crimson_ua_edu/IQACoOSiWkRiRaH5TzzKNe1-AVXiEP9j0GsuXHOQuB3-xt8?e=xNqtLm){:target="_blank"}
+*   [Project Planning Document](https://bama365-my.sharepoint.com/:w:/g/personal/sbillante_crimson_ua_edu/IQB4OthIM79OQbkatyxZXDemAV3moBLBr6eNfnmGPWwJtv8?e=RmCk1v){:target="_blank"}
 
 # Sprint 2 Deliverables
 
