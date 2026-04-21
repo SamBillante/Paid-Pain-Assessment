@@ -24,6 +24,34 @@
 10. **UpperBody/LowerBody Scan(Live Joint Angle Capture)** - Verify as the user moves their arms, the symmetry difference values in the info box update in real time quickly and accurately.
 11. **UpperBody/LowerBody Scan(Repetition Counter)** - Verify when a user raises both arms overhead and then lowers them back down past the starting position, the rep counter increments. 
 ## Test Scripts 
-
+**Required Field Validation(Missing Name)**
 ```javascript
+const { Builder, By, until } = require('selenium-webdriver');
+async function test_TS01_RequiredFieldValidation_EmptyForm() {
+    let driver = await new Builder().forBrowser('chrome').build();
+    try {
+        await driver.get('file:///path/to/Paid-Pain-Assessment/index.html');
+
+        // Submits without filling anything in
+        let submitBtn = await driver.findElement(By.css("button[type='submit']"));
+        await submitBtn.click();
+
+        // Confirmation screen should NOT be visible
+        let confirmationScreen = await driver.findElement(By.id('thankYouMessage'));
+        let isDisplayed = await confirmationScreen.isDisplayed();
+        console.assert(!isDisplayed, 'FAIL: Confirmation screen appeared on empty form submission');
+
+        // Name field should be invalid
+        let nameField = await driver.findElement(By.id('fullName'));
+        let isValid = await driver.executeScript('return arguments[0].validity.valid;', nameField);
+        console.assert(!isValid, 'FAIL: Name field should be invalid when empty');
+
+        console.log('TS-01 PASSED');
+    } catch (e) {
+        console.error('TS-01 FAILED:', e.message);
+    } finally {
+        await driver.quit();
+    }
+}
+test_TS01_RequiredFieldValidation_EmptyForm();
 ```
