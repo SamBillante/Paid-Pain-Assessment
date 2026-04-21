@@ -340,9 +340,9 @@ async function handleFormSubmit(event) {
 
         // Clear visible form fields after successful submission.
         // No data is persisted locally.
-        if (form) {
+        /* if (form) {
             form.reset();
-        }
+        } */
     } catch (error) {
         console.error('Form submission error:', error);
         showAlert(
