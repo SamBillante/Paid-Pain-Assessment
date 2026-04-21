@@ -198,3 +198,26 @@ Use this checklist when setting up a new deployment:
 | Calendly | Basic scheduling | Need reminders, branding, or team features |
 | ngrok | Temporary URLs, rate limited | Need a stable public URL for testing |
 | GitHub Pages | Generous free tier | High traffic or custom build pipelines |
+
+---
+ 
+## Troubleshooting
+ 
+**3D body map shows a black screen or never finishes loading**
+The `assets/human-body2.glb` file is either missing or the page is being opened directly as a file rather than through a server. Confirm the file exists in the `assets/` folder, then make sure you are accessing the page via `http://localhost:3000` and not `file:///`. See Running Locally above.
+ 
+**3D body map loads locally but not on GitHub Pages**
+The GLB file may not have been committed to the repository. Run `git status` to confirm it is tracked, then `git add assets/human-body2.glb` and push. 
+ 
+**Form submission shows an error message instead of the confirmation screen**
+EmailJS is configured but the send is failing. The most common causes are an incorrect Service ID or Template ID, or the monthly send limit (200 on the free tier) has been reached. Check the EmailJS dashboard under **Email Logs**.
+ 
+**Webcam does not start or the camera button does nothing**
+The body scan pages require HTTPS to access the camera on most mobile browsers and on Chrome. If running locally this works over `http://localhost`, but on any deployed URL it must be `https://`. GitHub Pages provides HTTPS automatically. If testing via ngrok, use the `https://` ngrok URL, not the local IP.
+ 
+**ngrok shows ERR_NGROK_8012 or connection refused**
+The local server (`npx serve .`) is not running. Both terminals must be active simultaneously — one running the server, one running ngrok. Restart `npx serve .` first, then restart ngrok.
+ 
+**Page loads but styles look broken**
+The browser may be serving a cached version of `styles.css`. Hard refresh with `Cmd+Shift+R` (Mac) or `Ctrl+Shift+R` (Windows). If deploying to GitHub Pages, note that it can take a few minutes for updated files to propagate after a push.
+ 
