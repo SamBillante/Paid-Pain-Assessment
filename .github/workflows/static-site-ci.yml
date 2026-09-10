@@ -4,11 +4,9 @@ on:
   pull_request:
     branches:
       - main
-      - chore/add-static-site-ci
   push:
     branches:
       - main
-      - chore/add-static-site-ci
 
 permissions:
   contents: read
