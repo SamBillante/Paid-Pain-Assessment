@@ -1,0 +1,49 @@
+name: Static Site CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - chore/add-static-site-ci
+  push:
+    branches:
+      - main
+      - chore/add-static-site-ci
+
+permissions:
+  contents: read
+
+jobs:
+  static-checks:
+    name: Static site checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Install CI dependencies
+        run: npm ci
+
+      - name: Validate HTML
+        run: npm run lint:html
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check script.js
+          node --check viewer.js
+
+      - name: Verify required site files
+        run: |
+          test -s index.html
+          test -s upperbodyscan.html
+          test -s lowerbodyscan.html
+          test -s styles.css
+          test -s script.js
+          test -s viewer.js
+          test -s assets/human-body2.glb
