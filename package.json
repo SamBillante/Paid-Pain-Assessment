@@ -1,0 +1,10 @@
+{
+  "name": "paid-pain-assessment",
+  "private": true,
+  "scripts": {
+    "lint:html": "htmlhint index.html upperbodyscan.html lowerbodyscan.html"
+  },
+  "devDependencies": {
+    "htmlhint": "^1.9.0"
+  }
+}
